@@ -1,0 +1,678 @@
+<!--Caravan of Noobs 4/24/24-->
+<!--Goblin Game-->
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf=8">
+    <title>Goblin Game</title>
+    <link rel="icon" type="img/x-icon" href="Hero_Icon.png">
+    <style>
+        body,
+        #battleBox,
+        #stats,
+        #combatAnimation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #animationBox {
+            display: flex;
+            flex-direction: row;
+            background-color: lightblue;
+        }
+
+        #combatAnimation img {
+            max-width: 60%;
+        }
+
+        body {
+            background-color: burlywood;
+        }
+
+        #stats {
+            background-color: darkolivegreen;
+        }
+
+
+        #nextBox {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+    </style>
+
+</head>
+
+<Body>
+
+    <span id="battleBox">
+        <h2><span id="battleStatus">You encountered a Goblin!</span></h2>
+        <h4><span id="startStatus">Press Next Turn to Start!</span></h4>
+    </span>
+
+    <div id="animationBox">
+        <span id="playerBox">
+            <!--Player Animation-->
+            <div id="combatAnimation">
+                <img id="playerAnimation" src="Hero_Idle.gif">
+            </div>
+            <!--Player Stats-->
+            <div id="stats">
+                <h1><span id="playerName">Hero</span></h1>
+                <h3>HP: <span id="playerHP">?</span></h3>
+                <h4>ATK: <span id="playerATK">?</span></h4>
+                <h4>DEF: <span id="playerDEF">?</span></h4>
+                <h4>ITM: <span id="playerITM">?</span></h4>
+            </div>
+        </span>
+
+        <span id="goblinBox">
+            <!--Goblin Animation-->
+            <div id="combatAnimation">
+                <img id="goblinAnimation" src="Goblin_Idle.gif">
+            </div>
+            <!--Goblin States-->
+            <div id="stats">
+                <h1><span id="goblinName">Goblin</span></h1>
+                <h3>HP: <span id="goblinHP">?</span></h3>
+                <h4>ATK: <span id="goblinATK">?</span></h4>
+                <h4>DEF: <span id="goblinDEF">?</span></h4>
+                <h4>ITM: <span id="goblinITM">0</span></h4>
+            </div>
+        </span>
+    </div>
+
+    <h3>Action Select</h3>
+
+    <span id="actionBox">
+        <!--Player Buttons-->
+        <button id="attack-button" title="Do a Physical Attack">Attack</button>
+        <button id="magic-button" title="Pierce Defences with a Risky Magical Attack">Magic</button>
+        <button id="charge-button" title="Boost Physical Offence for a Turn">Charge</button>
+        <button id="defend-button" title="Boost Physical Defences for a Turn">Defend</button>
+        <button id="heal-button" title="Use a Potion to Heal">Heal</button>
+        <button id="give-up" title="Surrender and End the Game">Give Up</button>
+    </span>
+
+    <span id="nextBox">
+        <button id="next-button">Next Turn</span></button>
+    </span>
+
+    <script>
+
+        //Player Name//
+        let name = prompt("What is your hero's name?", "Hero");
+        if (name == null) {
+            name = "Hero";
+        }
+        document.getElementById("playerName").textContent = name;
+
+        //Player Stats//
+        //HP//
+        let playerMaXHP = 10;
+        let playerHP = 10;
+        document.getElementById("playerHP").textContent = `${playerHP}/${playerMaXHP}`;
+        //ATK//
+        let playerATK = 5;
+        let playerATK2 = 0;
+        let playerTotalATK = playerATK + playerATK2;
+        document.getElementById("playerATK").textContent = playerTotalATK;
+        //DEF//
+        let playerDEF = 3;
+        let playerDEF2 = 0;
+        let playerTotalDEF = playerDEF + playerDEF2;
+        document.getElementById("playerDEF").textContent = playerTotalDEF;
+        //ITM//
+        let playerITM = 2;
+        document.getElementById("playerITM").textContent = playerITM;
+
+        //Goblin Stats//
+        //HP//
+        let goblinMaxHP = 15;
+        let goblinHP = 15;
+        document.getElementById("goblinHP").textContent = `${goblinHP}/${goblinMaxHP}`;
+        //ATK//
+        let goblinATK = 6;
+        document.getElementById("goblinATK").textContent = goblinATK;
+        //DEF//
+        let goblinDEF = 3;
+        let goblinDEF2 = 0;
+        let goblinTotalDEF = goblinDEF + goblinDEF2;
+        document.getElementById("goblinDEF").textContent = goblinTotalDEF;
+        //ITM//
+        document.getElementById("goblinITM").style.color = "red";
+
+        //Next Turn//
+        document.getElementById("next-button").addEventListener("click", nextTurn);
+        document.getElementById("next-button").addEventListener("click", hideStart);
+        //Hide Start Text//
+        function hideStart() {
+            document.getElementById("startStatus").textContent = ``;
+        }
+
+        //Turn Number//
+        let turnNumber = 0
+        hpColor();
+
+        //Combat//
+        function nextTurn() {
+            console.log(`Turn #${turnNumber}`);
+            document.getElementById("battleStatus").style.color = "black";
+            if (goblinHP <= 0) {
+                //Animation//
+                if (playerHP == playerMaXHP) {
+                    document.getElementById("playerAnimation").src = "Hero_Victory2.gif";
+                } else {
+                    document.getElementById("playerAnimation").src = "Hero_Victory.gif";
+                }
+                document.getElementById("playerName").style.color = "gold";
+                document.getElementById("battleStatus").textContent = `${name} Wins!`;
+                document.getElementById("goblinAnimation").src = "Goblin_Death.gif";
+                //
+                alert(`Congratulations ${name}! You won in ${turnNumber} Turns! Refresh to Play Again!`);
+            } else if (playerHP <= 0) {
+                //Animation//
+                document.getElementById("goblinAnimation").src = "Goblin_Victory.gif";
+                document.getElementById("playerAnimation").src = "Hero_Death.gif";
+                //
+                document.getElementById("goblinName").style.color = "gold";
+                document.getElementById("battleStatus").textContent = `The Goblin has Won...`;
+                alert("Game Over. You have perished. Refresh to Play Again!");
+            } else {
+                if (turnNumber % 2 == 0) {
+                    //Player Turn//
+                    console.log(`Player Turn`);
+                    document.getElementById("attack-button").addEventListener("click", playerHitReg);
+                    document.getElementById("defend-button").addEventListener("click", playerDefend);
+                    document.getElementById("charge-button").addEventListener("click", playerCharge);
+                    document.getElementById("magic-button").addEventListener("click", playerMagReg);
+                    document.getElementById("heal-button").addEventListener("click", playerHeal);
+                    document.getElementById("give-up").addEventListener("click", playerGiveUp);
+                } else {
+                    //Goblin Turn//
+                    console.log(`Goblin Turn`);
+                    let goblinAI = coinFlip();
+                    //Goblin Attacks//
+                    if (goblinAI == 1) {
+                        //Goblin Hits//
+                        if (die10() > 1) {
+                            console.log(`Goblin Attacks`);
+                            goblinAttack();
+                        }
+                        //Goblin Misses//
+                        else {
+                            console.log(`Goblin Misses`);
+                            //Animation//
+                            document.getElementById("playerAnimation").src = "Hero_Idle.gif";
+                            document.getElementById("goblinAnimation").src = "Goblin_Attack.gif";
+                            //
+                            document.getElementById("battleStatus").textContent = `The Goblin swung but missed!`;
+                            playerDefenceReset();
+                            turnNumber++;
+                            //console.log(`Turn #${turnNumber}`);
+                        }
+                    }
+                    //Goblin Defends//
+                    else {
+                        console.log(`Goblin Defends`);
+                        goblinDefend();
+                    }
+                }
+            }
+        }
+
+        //RNG Functions//
+        //50%//
+        function coinFlip() {
+            let coinRoll = Math.floor((Math.random() * 2) + 1);
+            //console.log(`Coin Tossed ${coinRoll}`);
+            return coinRoll;
+        }
+
+        //1in10//
+        function die10() {
+            let d10Roll = Math.floor((Math.random() * 10) + 1);
+            //console.log(`D10 Rolled ${d10Roll}`);
+            return d10Roll;
+        }
+
+        //1in20//
+        function die20() {
+            let d20Roll = Math.floor((Math.random() * 20) + 1);
+            //console.log(`D20 Rolled ${d20Roll}`);
+            return d20Roll;
+        }
+
+
+
+        //Combat Functions//
+        //Player Combat//
+        //Player Attack//
+        function playerHitReg() {
+            document.getElementById("battleStatus").style.color = "black";
+            if (playerHP > 0) {
+                if (turnNumber % 2 == 0) {
+                    if (die10() > 1) {
+                        console.log(`Player Attacks`)
+                        playerAttack();
+                    }
+                    else {
+                        console.log(`Player Missed`);
+                        //Animation//
+                        document.getElementById("playerAnimation").src = "Hero_Attack.gif";
+                        document.getElementById("goblinAnimation").src = "Goblin_Idle.gif";
+                        //
+                        document.getElementById("battleStatus").textContent = `You missed!`;
+                        goblinDefenceReset();
+                        playerChargeReset();
+                        turnNumber++;
+                        //console.log(`Turn #${turnNumber}`);
+                    }
+                }
+            }
+        }
+        function playerAttack() {
+            if (die20() == 20) {
+                let damageDealt = (playerTotalATK * 2) - goblinTotalDEF;
+                goblinHP = goblinHP - damageDealt;
+                //Animation//
+                document.getElementById("playerAnimation").src = "Hero_Attack.gif";
+                if (goblinTotalDEF < 4) {
+                    document.getElementById("goblinAnimation").src = "Goblin_Damage.gif";
+                }
+                //
+                document.getElementById("goblinHP").textContent = `${goblinHP}/${goblinMaxHP}`;
+                document.getElementById("battleStatus").style.color = "red";
+                document.getElementById("battleStatus").textContent = `You SMASHED the Goblin for ${damageDealt} damage!`;
+                goblinDefenceReset();
+                playerChargeReset();
+                hpColor();
+                turnNumber++
+                //console.log(`Turn #${turnNumber}`);
+                if (goblinHP <= 0) {
+                    document.getElementById("goblinAnimation").src = "Goblin_Death.gif";
+                }
+            } else {
+                let damageDealt = playerTotalATK - goblinTotalDEF;
+                goblinHP = goblinHP - damageDealt;
+                //Animation//
+                document.getElementById("playerAnimation").src = "Hero_Attack.gif";
+                if (goblinTotalDEF < 4) {
+                    document.getElementById("goblinAnimation").src = "Goblin_Damage.gif";
+                }
+                //
+                document.getElementById("goblinHP").textContent = `${goblinHP}/${goblinMaxHP}`;
+                document.getElementById("battleStatus").textContent = `You attacked the Goblin for ${damageDealt} damage!`;
+                goblinDefenceReset();
+                playerChargeReset();
+                hpColor();
+                turnNumber++
+                //console.log(`Turn #${turnNumber}`);
+                if (goblinHP <= 0) {
+                    document.getElementById("goblinAnimation").src = "Goblin_Death.gif";
+                }
+            }
+        }
+
+        //Player Magic//
+        function playerMagReg() {
+            document.getElementById("battleStatus").style.color = "black";
+            if (playerHP > 0) {
+                if (turnNumber % 2 == 0) {
+                    if (die10() > 6) {
+                        playerHP = playerHP - 1;
+                        document.getElementById("playerHP").textContent = `${playerHP}/${playerMaXHP}`;
+                        hpColor();
+                        //Animation//
+                        document.getElementById("playerAnimation").src = "Hero_Magic.gif";
+                        if (playerHP <= 0) {
+                            document.getElementById("playerAnimation").src = "Hero_Death.gif";
+                        }
+                        //
+                        console.log(`Player Casts Magic`)
+                        playerMagic();
+                    }
+                    else {
+                        console.log(`Player Missed`);
+                        playerHP = playerHP - 1;
+                        document.getElementById("playerHP").textContent = `${playerHP}/${playerMaXHP}`;
+                        hpColor();
+                        //Animation//
+                        document.getElementById("playerAnimation").src = "Hero_Magic.gif";
+                        document.getElementById("goblinAnimation").src = "Goblin_Idle.gif";
+                        if (playerHP <= 0) {
+                            document.getElementById("playerAnimation").src = "Hero_Death.gif";
+                        }
+                        //
+                        document.getElementById("battleStatus").textContent = `You missed!`;
+                        goblinDefenceReset();
+                        playerChargeReset();
+                        turnNumber++;
+                        //console.log(`Turn #${turnNumber}`);
+                    }
+                }
+            }
+        }
+        function playerMagic() {
+            let damageDealt = die10();
+            //console.log(damageDealt);
+            damageDealt = damageDealt - (playerITM * 2);
+            //console.log(damageDealt);
+            if (damageDealt < 0) {
+                damageDealt = 0;
+                //console.log(damageDealt);
+            }
+            goblinHP = goblinHP - damageDealt;
+            document.getElementById("goblinHP").textContent = `${goblinHP}/${goblinMaxHP}`;
+            if (damageDealt == 10) {
+                //Animation//
+                document.getElementById("goblinAnimation").src = "Goblin_Incinerated.gif";
+                //
+                document.getElementById("battleStatus").style.color = "red";
+                document.getElementById("battleStatus").textContent = `The Goblin was INCINERATED for ${damageDealt} damage!`;
+                goblinDefenceReset();
+                playerChargeReset();
+                hpColor();
+                turnNumber++;
+                if (goblinHP <= 0) {
+                    document.getElementById("goblinAnimation").src = "Goblin_Death.gif";
+                }
+            } else if (damageDealt > 5) {
+                //Animation//
+                document.getElementById("goblinAnimation").src = "Goblin_Scorched.gif";
+                //
+                document.getElementById("battleStatus").textContent = `The Goblin was scorched for ${damageDealt} damage!`;
+                goblinDefenceReset();
+                playerChargeReset();
+                hpColor();
+                turnNumber++;
+                if (goblinHP <= 0) {
+                    document.getElementById("goblinAnimation").src = "Goblin_Death.gif";
+                }
+            } else if (damageDealt >= 2) {
+                //Animation//
+                document.getElementById("goblinAnimation").src = "Goblin_Burned.gif";
+                //
+                document.getElementById("battleStatus").textContent = `The Goblin was burned for ${damageDealt} damage!`;
+                goblinDefenceReset();
+                playerChargeReset();
+                hpColor();
+                turnNumber++;
+                if (goblinHP <= 0) {
+                    document.getElementById("goblinAnimation").src = "Goblin_Death.gif";
+                }
+            } else {
+                //Animation//
+                document.getElementById("goblinAnimation").src = "Goblin_Toasted.gif";
+                //
+                document.getElementById("battleStatus").textContent = `The Goblin was lightly toasted for ${damageDealt} damage.`;
+                goblinDefenceReset();
+                playerChargeReset();
+                hpColor();
+                turnNumber++;
+                if (goblinHP <= 0) {
+                    document.getElementById("goblinAnimation").src = "Goblin_Death.gif";
+                }
+            }
+        }
+
+        //Player Defend//
+        function playerDefend() {
+            document.getElementById("battleStatus").style.color = "black";
+            if (playerHP > 0) {
+                if (turnNumber % 2 == 0) {
+                    console.log(`Player Defends`)
+                    playerDEF2 = 1 + coinFlip();
+                    playerTotalDEF = playerDEF + playerDEF2;
+                    //Animation//
+                    document.getElementById("playerAnimation").src = "Hero_Defend.gif";
+                    document.getElementById("goblinAnimation").src = "Goblin_Idle.gif";
+                    //
+                    document.getElementById("playerDEF").style.color = "lightblue";
+                    document.getElementById("playerDEF").textContent = playerTotalDEF;
+                    document.getElementById("battleStatus").textContent = `You defended yourself. Your DEF increased by ${playerDEF2}!`;
+                    goblinDefenceReset();
+                    //playerChargeReset();
+                    turnNumber++;
+                    //console.log(`Turn #${turnNumber}`);
+                }
+            }
+        }
+
+        //Player Charge//
+        function playerCharge() {
+            document.getElementById("battleStatus").style.color = "black";
+            if (playerHP > 0) {
+                if (turnNumber % 2 == 0) {
+                    console.log(`Player Charges`)
+                    playerATK2 = coinFlip();
+                    playerTotalATK = playerATK + playerATK2;
+                    //Animation//
+                    document.getElementById("playerAnimation").src = "Hero_Charge.gif";
+                    document.getElementById("goblinAnimation").src = "Goblin_Idle.gif";
+                    //
+                    document.getElementById("playerATK").style.color = "orange";
+                    document.getElementById("playerATK").textContent = playerTotalATK;
+                    document.getElementById("battleStatus").textContent = `You prepare to strike. Your ATK increased by ${playerATK2}!`;
+                    goblinDefenceReset();
+                    turnNumber++;
+                    //console.log(`Turn #${turnNumber}`);
+                }
+            }
+        }
+
+        //Player Heal//
+        function playerHeal() {
+            document.getElementById("battleStatus").style.color = "black";
+            if (turnNumber % 2 == 0) {
+                if (playerHP > 0) {
+                    if (playerHP >= playerMaXHP) {
+                        console.log(`Player failed to Heal`)
+                        //Animation//
+                        document.getElementById("playerAnimation").src = "Hero_Idle.gif";
+                        document.getElementById("goblinAnimation").src = "Goblin_Idle.gif";
+                        //
+                        document.getElementById("battleStatus").textContent = `You cannot heal at full health. You skip your turn.`;
+                        goblinDefenceReset();
+                        playerChargeReset();
+                        turnNumber++;
+                        //console.log(`Turn #${turnNumber}`);
+                    } else if (playerITM > 0) {
+                        console.log(`Player Heals`)
+                        let potion = die10();
+                        playerHP = playerHP + potion;
+                        playerITM--;
+                        if (playerHP >= playerMaXHP) {
+                            playerHP = playerMaXHP;
+                        }
+                        //Animation//
+                        document.getElementById("playerAnimation").src = "Hero_Heal.gif";
+                        document.getElementById("goblinAnimation").src = "Goblin_Idle.gif";
+                        //
+                        document.getElementById("playerHP").textContent = `${playerHP}/${playerMaXHP}`;
+                        document.getElementById("playerITM").textContent = `${playerITM}`;
+                        document.getElementById("battleStatus").style.color = "lightgreen";
+                        document.getElementById("battleStatus").textContent = `You drink a potion and healed by ${potion}`;
+                        goblinDefenceReset();
+                        playerChargeReset();
+                        hpColor();
+                        turnNumber++;
+                        if (playerITM == 0) {
+                            document.getElementById("playerITM").style.color = "red";
+                        }
+                        //console.log(`Turn #${turnNumber}`);
+                    } else {
+                        console.log(`Player is out of Potions`)
+                        //Animation//
+                        document.getElementById("playerAnimation").src = "Hero_Idle.gif";
+                        document.getElementById("goblinAnimation").src = "Goblin_Idle.gif";
+                        //
+                        document.getElementById("battleStatus").textContent = `You have no more items. You skip your turn.`;
+                        goblinDefenceReset();
+                        playerChargeReset();
+                        turnNumber++;
+                        //console.log(`Turn #${turnNumber}`);
+                    }
+                }
+            }
+        }
+        //Player Gives Up//
+        function playerGiveUp() {
+            document.getElementById("battleStatus").style.color = "black";
+            if (turnNumber % 2 == 0) {
+                if (playerHP > 0) {
+                    console.log(`Player Gave Up`)
+                    playerHP = 0;
+                    //Animation//
+                    document.getElementById("playerAnimation").src = "Hero_Surrender.gif";
+                    document.getElementById("goblinAnimation").src = "Goblin_Idle.gif";
+                    //
+                    document.getElementById("playerHP").textContent = `${playerHP}/${playerMaXHP}`;
+                    document.getElementById("battleStatus").textContent = `You have surrendered. The Goblin lives another day.`;
+                    //console.log(`Turn #${turnNumber}`);
+                }
+            }
+        }
+
+
+        //Goblin Combat//
+        function goblinAttack() {
+            if (die20() == 1) {
+                let damageDealt = (goblinATK + goblinTotalDEF) - playerTotalDEF;
+                playerHP = playerHP - damageDealt;
+                //Animation//
+                document.getElementById("goblinAnimation").src = "Goblin_Attack.gif";
+                if (playerTotalDEF < 4) {
+                    document.getElementById("playerAnimation").src = "Hero_Damage.gif";
+                }
+                document.getElementById("playerHP").textContent = `${playerHP}/${playerMaXHP}`;
+                document.getElementById("battleStatus").style.color = "red";
+                document.getElementById("battleStatus").textContent = `The Goblin PULVERIZED you for ${damageDealt} damage!`;
+                playerDefenceReset();
+                hpColor();
+                turnNumber++;
+                if (playerHP <= 0) {
+                    document.getElementById("playerAnimation").src = "Hero_Death.gif";
+                }
+            } else {
+                let damageDealt = goblinATK - playerTotalDEF;
+                playerHP = playerHP - damageDealt;
+                //Animation//
+                document.getElementById("goblinAnimation").src = "Goblin_Attack.gif";
+                if (playerTotalDEF < 4) {
+                    document.getElementById("playerAnimation").src = "Hero_Damage.gif";
+                }
+                document.getElementById("playerHP").textContent = `${playerHP}/${playerMaXHP}`;
+                document.getElementById("battleStatus").textContent = `The Goblin attacked you for ${damageDealt} damage!`;
+                playerDefenceReset();
+                hpColor();
+                turnNumber++;
+                if (playerHP <= 0) {
+                    document.getElementById("playerAnimation").src = "Hero_Death.gif";
+                }
+                //console.log(`Turn #${turnNumber}`);
+            }
+        }
+        //Goblin Defend//
+        function goblinDefend() {
+            goblinDEF2 = coinFlip();
+            goblinTotalDEF = goblinDEF + goblinDEF2;
+            //Animation//
+            document.getElementById("goblinAnimation").src = "Goblin_Defend.gif";
+            document.getElementById("playerAnimation").src = "Hero_Idle.gif";
+            //
+            document.getElementById("goblinDEF").style.color = "lightblue";
+            document.getElementById("goblinDEF").textContent = goblinTotalDEF;
+            document.getElementById("battleStatus").textContent = `The Goblin defended itself. It's DEF increased by ${goblinDEF2}!`;
+            playerDefenceReset();
+            turnNumber++;
+            //console.log(`Turn #${turnNumber}`);
+        }
+
+
+        //Stat Reset//
+        function playerChargeReset() {
+            playerATK2 = 0;
+            playerTotalATK = playerATK + playerATK2;
+            document.getElementById("playerATK").style.color = "black";
+            document.getElementById("playerATK").textContent = playerTotalATK;
+        }
+        function playerDefenceReset() {
+            playerDEF2 = 0;
+            playerTotalDEF = playerDEF + playerDEF2;
+            document.getElementById("playerDEF").style.color = "black";
+            document.getElementById("playerDEF").textContent = playerTotalDEF;
+        }
+        function goblinDefenceReset() {
+            goblinDEF2 = 0;
+            goblinTotalDEF = goblinDEF + goblinDEF2;
+            document.getElementById("goblinDEF").style.color = "black";
+            document.getElementById("goblinDEF").textContent = goblinTotalDEF;
+        }
+
+        //WinLose//
+        function winLose() {
+            if (goblinHP <= 0) {
+                //Animation//
+                if (playerHP == playerMaXHP) {
+                    document.getElementById("playerAnimation").src = "Hero_Victory2.gif";
+                } else {
+                    document.getElementById("playerAnimation").src = "Hero_Victory.gif";
+                }
+                document.getElementById("goblinAnimation").src = "Goblin_Death.gif";
+                //
+                document.getElementById("playerName").style.color = "gold";
+                document.getElementById("battleStatus").textContent = `${name} Wins!`;
+                alert(`Congratulations ${name}! You won in ${turnNumber} Turns! Refresh to Play Again!`);
+            } else if (playerHP <= 0) {
+                //Animation//
+                document.getElementById("goblinAnimation").src = "Goblin_Victory.gif";
+                document.getElementById("playerAnimation").src = "Hero_Death.gif";
+                //
+                document.getElementById("goblinName").style.color = "gold";
+                document.getElementById("battleStatus").textContent = `The Goblin has Won...`;
+                alert("Game Over. You have perished. Refresh to Play Again!");
+            }
+        }
+
+        //HP Color//
+        function hpColor() {
+            if (playerHP == playerMaXHP) {
+                document.getElementById("playerHP").style.color = "lightgreen";
+            } else if (playerHP <= 3) {
+                document.getElementById("playerHP").style.color = "red";
+            } else {
+                document.getElementById("playerHP").style.color = "black";
+            }
+            if (goblinHP == goblinMaxHP) {
+                document.getElementById("goblinHP").style.color = "lightgreen";
+            } else if (goblinHP <= 2) {
+                document.getElementById("goblinHP").style.color = "red";
+            } else {
+                document.getElementById("goblinHP").style.color = "black";
+            }
+        }
+    </script>
+
+</Body>
+
+<footer>
+    <hr>
+    <h4>Tutorial</h4>
+    <h5>Defeat the Goblin to win. Whoever's HP is reduced down to 0 loses.</h5>
+    <h5>Hit [Next Turn] to start the game.</h5>
+    <h5>On your turn select an action. Example: [Attack]</h5>
+    <h5>When your turn is over press [Next Turn].</h5>
+    <hr>
+    <h4>Guide</h4>
+    <h5>[Attack] - Deal Damage if Player's ATK > Enemy's DEF<br>
+        [HIT 90% | CRIT 5%]</h5>
+    <h5>[Magic] - Lose 1 HP to cast a spell that deals 0 - 10 Damage that ignores Enemy's DEF<br>
+        Magic is more powerful the less ITM you have<br>
+        [HIT 40% | CRIT 0%]</h5>
+    <h5>[Charge] - Increase ATK by 1 or 2 for one Turn</h5>
+    <h5>[Defend] - Increase DEF by 2 or 3 for one Turn<br>
+        Allows you to hold [Charge] for one more Turn</h5>
+    <h5>[Heal] - Use 1 ITM to heal for 1 - 10 HP</h5>
+    <h5>[Give Up] - Forfeits the fight</h5>
+</footer>
