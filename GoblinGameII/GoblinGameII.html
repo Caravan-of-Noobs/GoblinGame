@@ -1,0 +1,3437 @@
+<!--Caravan of Noobs 7/7/24-->
+<!--Goblin Game II-->
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf=8">
+    <title>Goblin Game II</title>
+    <link rel="icon" type="img/x-icon" href="Hero_Icon_II.png">
+    <style>
+        body,
+        #battleBox,
+        #stats,
+        #combatAnimation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #animationBox {
+            background-color: lightblue;
+        }
+
+        #actionBox {
+            background-color: darkolivegreen;
+            width: 60%;
+        }
+
+        #statBox {
+            background-color: sienna;
+        }
+
+        body {
+            background-color: burlywood;
+        }
+
+        #animationBox,
+        #statBox {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 60%;
+        }
+
+        #combatAnimation img {
+            max-height: 300px;
+            max-width: 100%;
+        }
+
+        #playerAnimation {
+            filter: grayscale(0%);
+            filter: opacity(100%)
+        }
+
+        #goblinAnimation {
+            filter: grayscale(0%);
+        }
+
+        #actionBox,
+        #classBox {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        #stageStatus {
+            display: none;
+        }
+
+        #turnStatus {
+            display: none;
+        }
+
+        #nextBox {
+            display: none;
+            justify-content: center;
+            padding-top: 10px;
+        }
+
+        #classBox {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #knightBox {
+            display: none;
+            justify-content: center;
+        }
+
+        #princessBox {
+            display: none;
+            justify-content: center;
+        }
+
+        #mageBox {
+            display: none;
+            justify-content: center;
+        }
+
+        #huntressBox {
+            display: none;
+            justify-content: center;
+        }
+
+        #ninjaBox {
+            display: none;
+            justify-content: center;
+        }
+        
+
+        button {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            margin-left: .2em;
+            margin-right: .2em;
+        }
+
+        #levelHP,
+        #levelATK,
+        #levelMAG,
+        #levelDEF,
+        #levelRES,
+        #levelCRT,
+        #levelSKL,
+        #levelITM {
+            color: aqua;
+            display: none;
+        }
+
+        #stealITM {
+            color: gold;
+            display: none;
+        }
+
+        #knightGuide,
+        #princessGuide,
+        #mageGuide,
+        #huntressGuide,
+        #ninjaGuide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!--Battle Box-->
+    <span id="battleBox">
+        <h1><span id="battleStatus">Welcome to Goblin Game II!</span></h1>
+        <h2><span id="stageStatus">Level 1</span></h2>
+        <h4><span id="turnStatus">Press [Next Turn] to Start!</span></h4>
+    </span>
+
+    <!--Class Select-->
+    <div id="classBox">
+        <h2>Select your hero's class.</h2>
+        <button id="knightButton" title="A Balanced Warrior with high ATK">Knight</span></button>
+        <button id="princessButton" title="A Defensive Protector with high DEF and CRT">Princess</span></button>
+        <button id="mageButton" title="A Frail Mage with Powerful MAG and RES">Mage</span></button>
+        <button id="huntressButton" title="An Archer with high SKL">Huntress</span></button>
+        <button id="ninjaButton" title="A Ninja with power CRT strikes">Ninja</span></button>
+    </div>
+
+    <div id="animationBox">
+        <span id="playerBox">
+            <!--Player Animation-->
+            <div id="combatAnimation">
+                <img id="playerAnimation" src="placeholderPlayer.gif">
+            </div>
+        </span>
+
+        <span id="goblinBox">
+            <!--Goblin Animation-->
+            <div id="combatAnimation">
+                <img id="goblinAnimation" src="placeholderGoblin.gif">
+            </div>
+        </span>
+    </div>
+
+    <span id="actionBox">
+        <!--Player Buttons-->
+        <span id="knightBox">
+            <button id="attack-button0" title="Do a Physical Attack">Attack</button>
+            <button id="magic-button0" title="Use a Risky Magical Attack">Magic</button>
+            <button id="charge-button0" title="Boost Physical Offence for a Turn">Charge</button>
+            <button id="defend-button0" title="Boost Physical Defences for a Turn">Defend</button>
+            <button id="heal-button0" title="Use a Potion to Heal">Heal</button>
+            <button id="give-up0" title="Surrender and End the Game">Give Up</button>
+        </span>
+        <span id="princessBox">
+            <button id="attack-button1" title="Do a Physical Attack">Attack</button>
+            <button id="counter-button1" title="Deflects Incoming Damage Back to Sender">Counter</button>
+            <button id="gambit-button1" title="Boost Physical Offence at the Cost of DEF for a Turn">Gambit</button>
+            <button id="defend-button1" title="Boost Physical Defences for a Turn">Defend</button>
+            <button id="heal-button1" title="Use a Potion to Heal">Heal</button>
+            <button id="give-up1" title="Surrender and End the Game">Give Up</button>
+        </span>
+        <span id="mageBox">
+            <button id="attack-button2" title="Do a Physical Attack">Attack</button>
+            <button id="magic-button2" title="Use a Risky Magical Attack">Magic</button>
+            <button id="mCharge-button2" title="Boost Magical Offence for a Turn">Magic Charge</button>
+            <button id="debuff-button2" title="Reduce Enemy Stats for a Turn">Debuff</button>
+            <button id="siphon-button2" title="Siphon HP from the Enemy to Regain Health">Siphon</button>
+            <button id="give-up2" title="Surrender and End the Game">Give Up</button>
+        </span>
+        <span id="huntressBox">
+            <button id="attack-button3" title="Do a Physical Attack">Attack</button>
+            <button id="poison-button3" title="Risky Poison Attack for Damage Over Time">Poison Arrow</button>
+            <button id="pierce-button3" title="Pierce Enemy Defences with a Weak Attack">Piercing Arrow</button>
+            <button id="evade-button3" title="Reduce Enemy SKL for a Turn">Evade</button>
+            <button id="heal-button3" title="Use a Potion to Heal">Heal</button>
+            <button id="give-up3" title="Surrender and End the Game">Give Up</button>
+        </span>
+        <span id="ninjaBox">
+            <button id="attack-button4" title="Do a Physical Attack">Attack</button>
+            <button id="strike-button4" title="Use Enemy Buffs Against Them">Strike</button>
+            <button id="steal-button4" title="Steal an Item with a Weak Attack">Steal</button>
+            <button id="vanish-button4" title="Negate All Damage for a Turn">Vanish</button>
+            <button id="heal-button4" title="Use a Potion to Heal">Heal</button>
+            <button id="give-up4" title="Surrender and End the Game">Give Up</button>
+        </span>
+        <span id="nextBox">
+            <button id="next-button">Next Turn</span></button>
+        </span>
+    </span>
+
+
+    <div id="statBox">
+        <!--Player Stats-->
+        <div id="stats">
+            <h1><span id="playerName">?</span></h1>
+            <h3>HP: <span id="playerHP">?</span> <!----><span id="levelHP">+?</span></h3>
+            <h4>ATK: <span id="playerATK">?</span> <!----><span id="levelATK">+?</span></h4>
+            <h4>MAG: <span id="playerMAG">?</span> <!----><span id="levelMAG">+?</span></h4>
+            <h4>DEF: <span id="playerDEF">?</span> <!----><span id="levelDEF">+?</span></h4>
+            <h4>RES: <span id="playerRES">?</span> <!----><span id="levelRES">+?</span></h4>
+            <h4>CRT: <span id="playerCRT">?</span> <!----><span id="levelCRT">+?</span></h4>
+            <h4>SKL: <span id="playerSKL">?</span> <!----><span id="levelSKL">+?</span></h4>
+            <h4>ITM: <span id="playerITM">?</span> <!----><span id="levelITM">+?</span> <!----><span
+                    id="stealITM">+?</span></h4>
+        </div>
+
+        <!--Enemy Stats-->
+        <div id="stats">
+            <h1><span id="goblinName">?</span></h1>
+            <h3>HP: <span id="goblinHP">?</span></h3>
+            <h4>ATK: <span id="goblinATK">?</span></h4>
+            <h4>MAG: <span id="goblinMAG">?</span></h4>
+            <h4>DEF: <span id="goblinDEF">?</span></h4>
+            <h4>RES: <span id="goblinRES">?</span></h4>
+            <h4>CRT: <span id="goblinCRT">?</span></h4>
+            <h4>SKL: <span id="goblinSKL">?</span></h4>
+            <h4>ITM: <span id="goblinITM">?</span></h4>
+        </div>
+    </div>
+
+    <script>
+        `use strict`
+
+        //Player Name//
+        let name = prompt("What is your hero's name?", "Hero");
+        if (name == ``) {
+            name = "Hero";
+        }
+        document.getElementById("playerName").textContent = name;
+
+        //Player Stats//
+
+        //HP//
+        let playerMaXHP = 0;
+        let playerHP = 0;
+        let playerHP3 = 0;
+        //ATK//
+        let playerATK = 0;
+        let playerATK2 = 0;
+        let playerATK3 = 0;
+        let playerTotalATK = playerATK + playerATK2 + playerATK3;
+        //MAG//
+        let playerMAG = 0;
+        let playerMAG2 = 0;
+        let playerMAG3 = 0;
+        let playerTotalMAG = playerMAG + playerMAG2 + playerMAG3;
+        //DEF//
+        let playerDEF = 0;
+        let playerDEF2 = 0;
+        let playerDEF3 = 0;
+        let playerTotalDEF = playerDEF + playerDEF2 + playerDEF3;
+        //RES//
+        let playerRES = 0;
+        let playerRES2 = 0;
+        let playerRES3 = 0;
+        let playerTotalRES = playerRES + playerRES2 + playerRES3;
+        //CRT//
+        let playerCRT = 0;
+        let playerCRT2 = 0;
+        let playerCRT3 = 0;
+        let playerTotalCRT = playerCRT + playerCRT2 + playerCRT3;
+        //SKL//
+        let playerSKL = 0;
+        let playerSKL2 = 0;
+        let playerSKL3 = 0;
+        let playerTotalSKL = playerSKL + playerSKL2 + playerSKL3;
+        //ITM//
+        let playerITM = 0;
+
+        //Growth Rates//
+        let growthHP = 0;
+        let growthATK = 0;
+        let growthMAG = 0;
+        let growthDEF = 0;
+        let growthRES = 0;
+        let growthCRT = 0;
+        let growthSKL = 0;
+        let growthITM = 0;
+
+        //Goblin Stats//
+        let goblinBonus = 0;
+
+        //HP//
+        let goblinMaXHP = 0;
+        let goblinHP = 0;
+        //ATK//
+        let goblinATK = 0;
+        let goblinATK2 = 0;
+        let goblinTotalATK = goblinATK + goblinATK2 + goblinBonus;
+        //MAG//
+        let goblinMAG = 0;
+        let goblinMAG2 = 0;
+        let goblinTotalMAG = playerMAG + playerMAG2 + goblinBonus;
+        //DEF//
+        let goblinDEF = 0;
+        let goblinDEF2 = 0;
+        let goblinTotalDEF = goblinDEF + goblinDEF2 + goblinBonus;
+        //RES//
+        let goblinRES = 0;
+        let goblinRES2 = 0;
+        let goblinTotalRES = goblinRES + goblinRES2 + goblinBonus;
+        //CRT//
+        let goblinCRT = 0;
+        let goblinCRT2 = 0;
+        let goblinTotalCRT = goblinCRT + goblinCRT2 + goblinBonus;
+        //SKL//
+        let goblinSKL = 0;
+        let goblinSKL2 = 0;
+        let goblinTotalSKL = goblinSKL + goblinSKL2 + goblinBonus;
+        //ITM//
+        let goblinITM = 0;
+
+        statUpdates();
+
+        //Class Select//
+        let selectedClass = 0
+        document.getElementById("knightButton").addEventListener("click", knightSelect);
+        function knightSelect() {
+            selectedClass = 0;
+            classSelect();
+        };
+        document.getElementById("princessButton").addEventListener("click", princessSelect);
+        function princessSelect() {
+            selectedClass = 1;
+            classSelect();
+        };
+        document.getElementById("mageButton").addEventListener("click", mageSelect);
+        function mageSelect() {
+            selectedClass = 2;
+            classSelect();
+        };
+        document.getElementById("huntressButton").addEventListener("click", huntressSelect);
+        function huntressSelect() {
+            selectedClass = 3;
+            classSelect();
+        };
+        document.getElementById("ninjaButton").addEventListener("click", ninjaSelect);
+        function ninjaSelect() {
+            selectedClass = 4;
+            classSelect();
+        };
+
+        //Class Stats//
+        function classSelect() {
+            document.getElementById("turnStatus").style.display = "flex";
+            document.getElementById("nextBox").style.display = "flex";
+            document.getElementById("classBox").style.display = "none";
+            playerAnim = 0;
+            switch (selectedClass) {
+                //Knight//
+                case 0:
+                    playerAnimation();
+                    console.log(`Knight Selected`);
+                    if (name == "Hero") {
+                        name = "Knight";
+                        document.getElementById("playerName").textContent = name;
+                    }
+                    //HP//
+                    playerMaXHP = 10;
+                    playerHP = 10;
+                    //ATK//
+                    playerATK = 5;
+                    //MAG//
+                    playerMAG = 10;
+                    //DEF//
+                    playerDEF = 3;
+                    //RES//
+                    playerRES = 2;
+                    //CRT//
+                    playerCRT = 5;
+                    //SKL//
+                    playerSKL = 10;
+                    //ITM//
+                    playerITM = 2;
+                    statUpdates();
+                    document.getElementById("knightBox").style.display = "flex";
+                    document.getElementById("knightGuide").style.display = "block";
+                    //Growth Rates//
+                    growthHP = 65;
+                    growthATK = 60;
+                    growthMAG = 15;
+                    growthDEF = 45;
+                    growthRES = 15;
+                    growthCRT = 45;
+                    growthSKL = 30;
+                    growthITM = 75;
+                    break;
+                //Princess//
+                case 1:
+                    playerAnimation();
+                    console.log(`Princess Selected`);
+                    if (name == "Hero") {
+                        name = "Princess";
+                        document.getElementById("playerName").textContent = name;
+                    }
+                    //HP//
+                    playerMaXHP = 15;
+                    playerHP = 15;
+                    //ATK//
+                    playerATK = 3;
+                    //MAG//
+                    playerMAG = 8;
+                    //DEF//
+                    playerDEF = 8;
+                    //RES//
+                    playerRES = 1;
+                    //CRT//
+                    playerCRT = 25;
+                    //SKL//
+                    playerSKL = 8;
+                    //ITM//
+                    playerITM = 1;
+                    statUpdates();
+                    document.getElementById("princessBox").style.display = "flex";
+                    document.getElementById("princessGuide").style.display = "block";
+                    //Growth Rates//
+                    growthHP = 65;
+                    growthATK = 15;
+                    growthMAG = 45;
+                    growthDEF = 60;
+                    growthRES = 15;
+                    growthCRT = 45;
+                    growthSKL = 30;
+                    growthITM = 75;
+                    break;
+                //Mage//
+                case 2:
+                    playerAnimation();
+                    console.log(`Mage Selected`);
+                    if (name == "Hero") {
+                        name = "Mage";
+                        document.getElementById("playerName").textContent = name;
+                    }
+                    //HP//
+                    playerMaXHP = 8;
+                    playerHP = 8;
+                    //ATK//
+                    playerATK = 4;
+                    //MAG//
+                    playerMAG = 15;
+                    //DEF//
+                    playerDEF = 2;
+                    //RES//
+                    playerRES = 8;
+                    //CRT//
+                    playerCRT = 5;
+                    //SKL//
+                    playerSKL = 12;
+                    //ITM//
+                    playerITM = 1;
+                    statUpdates();
+                    document.getElementById("mageBox").style.display = "flex";
+                    document.getElementById("mageGuide").style.display = "block";
+                    //Growth Rates//
+                    growthHP = 65;
+                    growthATK = 30;
+                    growthMAG = 60;
+                    growthDEF = 15;
+                    growthRES = 45;
+                    growthCRT = 15;
+                    growthSKL = 45;
+                    growthITM = 75;
+                    break;
+                //Huntress//
+                case 3:
+                    playerAnimation();
+                    console.log(`Huntress Selected`);
+                    if (name == "Hero") {
+                        name = "Huntress";
+                        document.getElementById("playerName").textContent = name;
+                    }
+                    //HP//
+                    playerMaXHP = 9;
+                    playerHP = 9;
+                    //ATK//
+                    playerATK = 5;
+                    //MAG//
+                    playerMAG = 9;
+                    //DEF//
+                    playerDEF = 2;
+                    //RES//
+                    playerRES = 5;
+                    //CRT//
+                    playerCRT = 15;
+                    //SKL//
+                    playerSKL = 20;
+                    //ITM//
+                    playerITM = 2;
+                    statUpdates();
+                    document.getElementById("huntressBox").style.display = "flex";
+                    document.getElementById("huntressGuide").style.display = "block";
+                    //Growth Rates//
+                    growthHP = 65;
+                    growthATK = 45;
+                    growthMAG = 15;
+                    growthDEF = 15;
+                    growthRES = 45;
+                    growthCRT = 30;
+                    growthSKL = 60;
+                    growthITM = 75;
+                    break;
+                //Ninja//
+                case 4:
+                    playerAnimation();
+                    console.log(`Ninja Selected`);
+                    if (name == "Hero") {
+                        name = "Ninja";
+                        document.getElementById("playerName").textContent = name;
+                    }
+                    //HP//
+                    playerMaXHP = 9;
+                    playerHP = 9;
+                    //ATK//
+                    playerATK = 4;
+                    //MAG//
+                    playerMAG = 7;
+                    //DEF//
+                    playerDEF = 2;
+                    //RES//
+                    playerRES = 5;
+                    //CRT//
+                    playerCRT = 35;
+                    //SKL//
+                    playerSKL = 15;
+                    //ITM//
+                    playerITM = 1;
+                    statUpdates();
+                    document.getElementById("ninjaBox").style.display = "flex";
+                    document.getElementById("ninjaGuide").style.display = "block";
+                    //Growth Rates//
+                    growthHP = 65;
+                    growthATK = 45;
+                    growthMAG = 30;
+                    growthDEF = 15;
+                    growthRES = 30;
+                    growthCRT = 60;
+                    growthSKL = 45;
+                    growthITM = 75;
+                    break;
+                //Failsafe//
+                default:
+                    console.log(`Oops Knight Selected`);
+                    if (name == "Hero") {
+                        name = "Knight";
+                        document.getElementById("playerName").textContent = name;
+                    }
+                    //HP//
+                    playerMaXHP = 10;
+                    playerHP = 10;
+                    //ATK//
+                    playerATK = 5;
+                    //MAG//
+                    playerMAG = 10;
+                    //DEF//
+                    playerDEF = 3;
+                    //RES//
+                    playerRES = 1;
+                    //CRT//
+                    playerCRT = 5;
+                    //SKL//
+                    playerSKL = 10;
+                    //ITM//
+                    playerITM = 2;
+                    statUpdates();
+                    document.getElementById("knightBox").style.display = "flex";
+                    //Growth Rates//
+                    growthHP = 100;
+                    growthATK = 100;
+                    growthMAG = 100;
+                    growthDEF = 100;
+                    growthRES = 100;
+                    growthCRT = 100;
+                    growthSKL = 100;
+                    growthITM = 100;
+                    break;
+            }
+            levelSelect();
+            turnAction--;
+        }
+
+        //Goblin Select//
+        let stageLevel = 0;
+        function levelSelect() {
+            playerAnim = 0;
+            goblinAnim = 0;
+            updateAnimation();
+            switch (stageLevel) {
+                //Level 1//
+                case 0:
+                    //Goblin//
+                    goblinAnimation();
+                    enemyName = `Goblin`;
+                    document.getElementById("goblinName").textContent = `${enemyName}`;
+                    //HP//
+                    goblinMaXHP = 10;
+                    goblinHP = 10;
+                    //ATK//
+                    goblinATK = 4;
+                    //MAG//
+                    goblinMAG = 0;
+                    //DEF//
+                    goblinDEF = 1;
+                    //RES//
+                    goblinRES = 0;
+                    //CRT//
+                    goblinCRT = 0;
+                    //SKL//
+                    goblinSKL = 5;
+                    //ITM//
+                    goblinITM = 0;
+                    statUpdates();
+                    break;
+                //Level 2//
+                case 1:
+                    //Red Goblin//
+                    goblinAnimation();
+                    enemyName = `Red Goblin`;
+                    document.getElementById("goblinName").textContent = `${enemyName}`;
+                    //HP//
+                    goblinMaXHP = 15;
+                    goblinHP = 15;
+                    //ATK//
+                    goblinATK = 6;
+                    //MAG//
+                    goblinMAG = 0;
+                    //DEF//
+                    goblinDEF = 3;
+                    //RES//
+                    goblinRES = 1;
+                    //CRT//
+                    goblinCRT = 5;
+                    //SKL//
+                    goblinSKL = 7;
+                    //ITM//
+                    goblinITM = 1;
+                    statUpdates();
+                    break;
+                //Level 3//
+                case 2:
+                    //Goblin Brute//
+                    goblinAnimation();
+                    enemyName = `Goblin Brute`;
+                    document.getElementById("goblinName").textContent = `${enemyName}`;
+                    //HP//
+                    goblinMaXHP = 25;
+                    goblinHP = 25;
+                    //ATK//
+                    goblinATK = 8;
+                    //MAG//
+                    goblinMAG = 10;
+                    //DEF//
+                    goblinDEF = 4;
+                    //RES//
+                    goblinRES = 2;
+                    //CRT//
+                    goblinCRT = 15;
+                    //SKL//
+                    goblinSKL = 8;
+                    //ITM//
+                    goblinITM = 1;
+                    statUpdates();
+                    break;
+                //Level 4//
+                case 3:
+                    //Goblin Wizard//
+                    goblinAnimation();
+                    enemyName = `Goblin Wizard`;
+                    document.getElementById("goblinName").textContent = `${enemyName}`;
+                    //HP//
+                    goblinMaXHP = 30;
+                    goblinHP = 30;
+                    //ATK//
+                    goblinATK = 7;
+                    //MAG//
+                    goblinMAG = 20;
+                    //DEF//
+                    goblinDEF = 4;
+                    //RES//
+                    goblinRES = 7;
+                    //CRT//
+                    goblinCRT = 1;
+                    //SKL//
+                    goblinSKL = 15;
+                    //ITM//
+                    goblinITM = 3;
+                    statUpdates();
+                    break;
+                //Level 5//
+                case 4:
+                    //Goblin King//
+                    goblinAnimation();
+                    enemyName = `Goblin King`;
+                    document.getElementById("goblinName").textContent = `${enemyName}`;
+                    //HP//
+                    goblinMaXHP = 50;
+                    goblinHP = 50;
+                    //ATK//
+                    goblinATK = 12;
+                    //MAG//
+                    goblinMAG = 20;
+                    //DEF//
+                    goblinDEF = 9;
+                    //RES//
+                    goblinRES = 5;
+                    //CRT//
+                    goblinCRT = 10;
+                    //SKL//
+                    goblinSKL = 20;
+                    //ITM//
+                    goblinITM = 1;
+                    statUpdates();
+                    break;
+                //Failsafe//
+                default:
+                    //Test Goblin//
+                    goblinAnimation();
+                    enemyName = `Test Goblin`;
+                    document.getElementById("goblinName").textContent = `${enemyName}`;
+                    //HP//
+                    goblinMaXHP = 100;
+                    goblinHP = 100;
+                    //ATK//
+                    goblinATK = 3;
+                    //MAG//
+                    goblinMAG = 0;
+                    //DEF//
+                    goblinDEF = 2;
+                    //RES//
+                    goblinRES = 2;
+                    //CRT//
+                    goblinCRT = 5;
+                    //SKL//
+                    goblinSKL = 3;
+                    //ITM//
+                    goblinITM = 0;
+                    statUpdates();
+                    break;
+            }
+        }
+
+
+
+        //Next Turn//
+        document.getElementById("next-button").addEventListener("click", nextTurn);
+
+        //Turn Based System//
+        let turnNumber = 0;
+        let turnAction = 1;
+        let firstTimeCheck = 0;
+
+        function nextTurn() {
+            if (turnAction == 0) {
+                turnNumber++;
+                turnAction++;
+                console.log(`Turn #${turnNumber} - Player Actions = ${turnAction} - Victory = ${victory} - Retry = ${retry} - Flag = ${whiteFlag}`);
+                document.getElementById("battleStatus").style.color = "black";
+                document.getElementById("animationBox").style.backgroundColor = `lightblue`;
+                if (firstTimeCheck == 0) {
+                    document.getElementById("battleStatus").textContent = `Level ${stageLevel + 1}`
+                    firstTimeCheck = 1;
+                }
+                hideLevel();
+                //Victory//
+                if (victory == 1) {
+                    console.log(`Victory Check`);
+                    victoryCheck();
+                }
+                //Retry//
+                else if (retry == 1) {
+                    console.log(`Retry Check`);
+                    retryBattle();
+                }
+                //WinLose//
+                else if (goblinHP <= 0 || playerHP <= 0) {
+                    console.log(`WinLose Check`);
+                    winLose();
+                }
+                //Battle//
+                else {
+                    //Goblin Turn//
+                    if (turnNumber % 2 == 0) {
+                        console.log(`${enemyName} Turn`);
+                        document.getElementById("turnStatus").textContent = `${enemyName}'s Turn`;
+                        enemyAI();
+                    }
+                    //Player Turn//
+                    else {
+                        console.log(`Player Turn`);
+                        document.getElementById("turnStatus").textContent = "Player's Turn";
+                        poisonPlayerLogic();
+                        //Player Attacks//
+                        //Universal//
+                        //Attack//
+                        document.getElementById("attack-button0").addEventListener("click", playerHitReg);
+                        document.getElementById("attack-button1").addEventListener("click", playerHitReg);
+                        document.getElementById("attack-button2").addEventListener("click", playerHitReg);
+                        document.getElementById("attack-button3").addEventListener("click", playerHitReg);
+                        document.getElementById("attack-button4").addEventListener("click", playerHitReg);
+                        //Magic//
+                        document.getElementById("magic-button0").addEventListener("click", playerMagReg);
+                        document.getElementById("magic-button2").addEventListener("click", playerMagReg);
+                        //Defend//
+                        document.getElementById("defend-button0").addEventListener("click", playerDefend);
+                        document.getElementById("defend-button1").addEventListener("click", playerDefend);
+                        //Heal//
+                        document.getElementById("heal-button0").addEventListener("click", playerHeal);
+                        document.getElementById("heal-button1").addEventListener("click", playerHeal);
+                        document.getElementById("heal-button3").addEventListener("click", playerHeal);
+                        document.getElementById("heal-button4").addEventListener("click", playerHeal);
+                        //Surrender//
+                        document.getElementById("give-up0").addEventListener("click", playerGiveUp);
+                        document.getElementById("give-up1").addEventListener("click", playerGiveUp);
+                        document.getElementById("give-up2").addEventListener("click", playerGiveUp);
+                        document.getElementById("give-up3").addEventListener("click", playerGiveUp);
+                        document.getElementById("give-up4").addEventListener("click", playerGiveUp);
+                        //Knight//
+                        document.getElementById("charge-button0").addEventListener("click", playerCharge);
+                        //Princess//
+                        document.getElementById("counter-button1").addEventListener("click", playerCounter);
+                        document.getElementById("gambit-button1").addEventListener("click", playerGambit);
+                        //Mage//
+                        document.getElementById("mCharge-button2").addEventListener("click", playerMCharge);
+                        document.getElementById("debuff-button2").addEventListener("click", playerDBuffReg);
+                        document.getElementById("siphon-button2").addEventListener("click", playerSiphReg);
+                        //Huntress//
+                        document.getElementById("poison-button3").addEventListener("click", playerPoisonReg);
+                        document.getElementById("pierce-button3").addEventListener("click", playerPierce);
+                        document.getElementById("evade-button3").addEventListener("click", playerEvade);
+                        //Ninja//
+                        document.getElementById("strike-button4").addEventListener("click", playerStrikeReg);
+                        document.getElementById("steal-button4").addEventListener("click", playerStealReg);
+                        document.getElementById("vanish-button4").addEventListener("click", playerVanish);
+                    }
+                }
+            }
+        }
+
+
+        //Combat Functions//
+        let damageDealt = 0;
+
+        //RNG Functions//
+        //50%//
+        function coinFlip() {
+            let coinRoll = Math.floor((Math.random() * 2) + 1);
+            //console.log(`Coin Tossed ${coinRoll}`);
+            return coinRoll;
+        }
+
+        //1in5//
+        function die5() {
+            let d5Roll = Math.floor((Math.random() * 5) + 1);
+            console.log(`D5 Rolled ${d5Roll}`);
+            return d5Roll;
+        }
+
+        //1in10//
+        function die10() {
+            let d10Roll = Math.floor((Math.random() * 10) + 1);
+            //console.log(`D10 Rolled ${d10Roll}`);
+            return d10Roll;
+        }
+
+        //1in20//
+        function die20() {
+            let d20Roll = Math.floor((Math.random() * 20) + 1);
+            //console.log(`D20 Rolled ${d20Roll}`);
+            return d20Roll;
+        }
+
+        //1in100//
+        function die100() {
+            let d100Roll = Math.floor((Math.random() * 100) + 1);
+            console.log(`D100 Rolled ${d100Roll}`);
+            return d100Roll;
+        }
+
+        //1inMAG//
+        function dieMAG() {
+            let dMAGRoll = Math.floor((Math.random() * playerTotalMAG) + 1);
+            //console.log(`DMAG Rolled ${dMAGRoll}`);
+            return dMAGRoll;
+        }
+
+        //1inSKL//
+        function dieSKL() {
+            let dSKLRoll = Math.floor((Math.random() * playerTotalSKL) + 1);
+            //console.log(`DSKL Rolled ${dSKLRoll}`);
+            return dSKLRoll;
+        }
+
+        //1inGoblinMAG//
+        function dieGobMAG() {
+            let dMAGRoll = Math.floor((Math.random() * goblinTotalMAG) + 1);
+            //console.log(`DMAG Rolled ${dMAGRoll}`);
+            return dMAGRoll;
+        }
+
+        //1GoblinSKL//
+        function dieGobSKL() {
+            let dSKLRoll = Math.floor((Math.random() * goblinTotalSKL) + 1);
+            //console.log(`DSKL Rolled ${dSKLRoll}`);
+            return dSKLRoll;
+        }
+
+        //Player Combat//
+
+        //Universal Attacks//
+
+        //Player Attack//
+        function playerHitReg() {
+            if (turnAction == 1) {
+                if (gambitStatus == 1) {
+                    playerAnim = 12;
+                } else {
+                    playerAnim = 1;
+                }
+                //Hit//
+                if (dieSKL() > 1) {
+                    console.log(`Player Hits`)
+                    goblinAnim = 9;
+                    playerAttack();
+                }
+                //Miss//
+                else {
+                    console.log(`Player Missed`);
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You missed!`;
+                }
+                counterStatus = 0;
+                goblinDefDecay();
+                playerOffDecay();
+                endTurnRefresh();
+            }
+        }
+        function playerAttack() {
+            //Critial Hit//
+            if (die100() <= playerTotalCRT) {
+                console.log(`Player CRITS!!!`)
+                damageDealt = (playerTotalATK * 2) - goblinTotalDEF;
+                console.log(damageDealt);
+                if (damageDealt < 0) {
+                    damageDealt = 0;
+                    console.log(damageDealt);
+                }
+                goblinHP = goblinHP - damageDealt;
+                //Status//
+                document.getElementById("battleStatus").style.color = "red";
+                document.getElementById("battleStatus").textContent = `You SMASHED the ${enemyName} for ${damageDealt} damage!`;
+            }
+            //Normal Attack//
+            else {
+                console.log(`Player Attacks`)
+                damageDealt = playerTotalATK - goblinTotalDEF;
+                console.log(damageDealt);
+                if (damageDealt < 0) {
+                    damageDealt = 0;
+                    console.log(damageDealt);
+                }
+                goblinHP = goblinHP - damageDealt;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You attacked the ${enemyName} for ${damageDealt} damage!`;
+            }
+        }
+
+        //Player Magic//
+        function playerMagReg() {
+            playerHP = playerHP - 1;
+            if (turnAction == 1) {
+                playerAnim = 2;
+                //Hit//
+                if (dieSKL() > (2)) {
+                    console.log(`Player Hits`)
+                    playerMagic();
+                }
+                //Miss//
+                else {
+                    console.log(`Player Missed`);
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You missed!`;
+                }
+                counterStatus = 0;
+                goblinDefDecay();
+                playerOffDecay();
+                endTurnRefresh();
+            }
+        }
+        function playerMagic() {
+            damageDealt = dieMAG() - goblinTotalRES;
+            console.log(damageDealt);
+            //damageDealt = Math.round(damageDealt - playerITM);//
+            console.log(damageDealt);
+            if (damageDealt < 0) {
+                damageDealt = 0;
+                console.log(damageDealt);
+            }
+            goblinHP = goblinHP - damageDealt;
+            //Incinerated//
+            if (damageDealt > (playerTotalMAG * .9)) {
+                //Animation//
+                goblinAnim = 23;
+                //Status//
+                document.getElementById("battleStatus").style.color = "red";
+                document.getElementById("battleStatus").textContent = `The ${enemyName} was INCINERATED for ${damageDealt} damage!`;
+                //Scorched//
+            } else if (damageDealt > (playerTotalMAG * .5)) {
+                //Animation//
+                goblinAnim = 22;
+                //Status//
+                document.getElementById("battleStatus").textContent = `The ${enemyName} was scorched for ${damageDealt} damage!`;
+                //Burned//
+            } else if (damageDealt >= playerTotalMAG * .2) {
+                //Animation//
+                goblinAnim = 21;
+                //Status//
+                document.getElementById("battleStatus").textContent = `The ${enemyName} was burned for ${damageDealt} damage!`;
+                //Toasted//
+            } else {
+                //Animation//
+                goblinAnim = 20;
+                //Status//
+                document.getElementById("battleStatus").textContent = `The ${enemyName} was lightly toasted for ${damageDealt} damage.`;
+            }
+        }
+
+        //Player Charge//
+        function playerCharge() {
+            if (turnAction == 1) {
+                playerAnim = 3;
+                goblinAnim = 0;
+                //Charge//
+                console.log(`Player Charges`)
+                playerATK2 = Math.round(playerTotalATK * .4);
+                if (playerATK2 < 1) {
+                    playerATK2 = 1;
+                }
+                console.log(playerATK2);
+                playerTotalATK = playerATK + playerATK2;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You prepare to strike. Your ATK increased by ${playerATK2}!`;
+                counterStatus = 0;
+                goblinDefDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Player Defend//
+        function playerDefend() {
+            if (turnAction == 1 && gambitStatus == 0) {
+                playerAnim = 4;
+                goblinAnim = 0;
+                //Defend//
+                console.log(`Player Defends`)
+                playerDEF2 = Math.round(playerTotalDEF * .4);
+                if (playerDEF2 < 1) {
+                    playerDEF2 = 1;
+                }
+                console.log(playerDEF2);
+                playerTotalDEF = playerDEF + playerDEF2;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You defended yourself. Your DEF increased by ${playerDEF2}!`;
+                counterStatus = 0;
+                goblinDefDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Player Heal//
+        let potion = 0;
+        function playerHeal() {
+            if (turnAction == 1) {
+                if (playerHP >= playerMaXHP) {
+                    console.log(`Player failed to Heal`)
+                    playerAnim = 0;
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You cannot heal at full health. You skip your turn.`;
+                } else if (playerITM > 0) {
+                    console.log(`Player Heals`);
+                    playerPoison = 0;
+                    potion = dieMAG() + dieMAG();
+                    console.log(potion);
+                    if (potion < Math.round(playerMaXHP / 2)) {
+                        potion = Math.round(playerMaXHP / 2);
+                    }
+                    console.log(potion);
+                    playerHP = playerHP + potion;
+                    playerITM--;
+                    if (playerHP >= playerMaXHP) {
+                        playerHP = playerMaXHP;
+                    }
+                    playerAnim = 5;
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You drink a potion and healed by ${potion}`;
+                } else {
+                    console.log(`Player is out of Potions`);
+                    playerAnim = 0;
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You have no more items. You skip your turn.`;
+                }
+                counterStatus = 0;
+                poisonPlayerLogic();
+                goblinDefDecay();
+                playerOffDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Player Gives Up//
+        let whiteFlag = 0;
+        function playerGiveUp() {
+            if (turnAction == 1) {
+                goblinAnim = 0;
+                playerHP = 0;
+                whiteFlag = 1;
+                //Status//
+                console.log(`Player Gave Up`)
+                document.getElementById("battleStatus").textContent = `You have surrendered. The ${enemyName} lives another day.`;
+                counterStatus = 0;
+                allBuffDecay();
+                poisonReset();
+                endTurnRefresh();
+            }
+        }
+
+
+        //Princess Attacks//
+        let counterStatus = 0;
+        let gambitStatus = 0;
+
+        //Counter//
+        function playerCounter() {
+            if (turnAction == 1) {
+                playerHP = playerHP - 2;
+                playerAnim = 2;
+                goblinAnim = 0;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You prepare to counter!`;
+                counterStatus = 1;
+                goblinDefDecay();
+                playerOffDecay();
+                endTurnRefresh();
+            }
+        }
+        function counterTrigger() {
+            playerAnim = 1;
+            goblinAnim = 9;
+            damageDealt = Math.round(goblinTotalATK * 1.5) - goblinTotalDEF;
+            console.log(damageDealt);
+            if (damageDealt < 0) {
+                damageDealt = 0;
+                console.log(damageDealt);
+            }
+            goblinHP = goblinHP - damageDealt;
+            //Status//
+            document.getElementById("battleStatus").style.color = "red";
+            document.getElementById("battleStatus").textContent = `You deflected the ${enemyName}'s Attack for ${damageDealt} damage!`;
+        }
+
+        //Gambit//
+        function playerGambit() {
+            if (turnAction == 1) {
+                playerAnim = 3;
+                goblinAnim = 0;
+                //Charge//
+                console.log(`The Princess' Gambit`);
+                playerDEF2 = -(Math.round(playerTotalDEF / 2));
+                playerATK2 = (Math.round(playerTotalDEF / 2));
+                console.log(playerDEF2);
+                console.log(playerATK2);
+                playerTotalDEF = playerDEF + playerDEF2;
+                playerTotalATK = playerATK + playerATK2;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You sacrificed ${playerATK2} DEF to boost ATK by ${playerATK2}!`;
+                gambitStatus = 1;
+                counterStatus = 0;
+                goblinDefDecay();
+                endTurnRefresh();
+            }
+        }
+
+
+        //Mage Attacks//
+        //Player Magic Charge//
+        function playerMCharge() {
+            if (turnAction == 1) {
+                playerAnim = 3;
+                goblinAnim = 0;
+                //Charge//
+                console.log(`Player Magic Charges`)
+                playerMAG2 = Math.round(playerTotalMAG * .4);
+                playerSKL2 = Math.round(playerTotalSKL * .4);
+                if (playerMAG2 < 1) {
+                    playerMAG2 = 1;
+                }
+                console.log(playerMAG2);
+                console.log(playerSKL2);
+                playerTotalMAG = playerMAG + playerMAG2;
+                playerTotalSKL = playerSKL + playerSKL2;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You harness energy. Your MAG increased by ${playerMAG2} and your SKL increased by ${playerSKL2}!`;
+                counterStatus = 0;
+                goblinDefDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Player Debuff//
+        function playerDBuffReg() {
+            //playerHP = playerHP - 1;
+            if (turnAction == 1) {
+                playerAnim = 2;
+                //Hit//
+                if (dieSKL() >= (2)) {
+                    console.log(`Player Hits`)
+                    goblinAnim = 9;
+                    playerDebuff();
+                }
+                //Miss//
+                else {
+                    console.log(`Player Missed`);
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You missed!`;
+                }
+                counterStatus = 0;
+                playerOffDecay();
+                endTurnRefresh();
+            }
+        }
+        function playerDebuff() {
+            document.getElementById("battleStatus").textContent = `You landed the debuff!`;
+            //Debuff//
+            goblinATK2 = -(Math.round(goblinTotalATK * .4));
+            goblinMAG2 = -(Math.round(goblinTotalMAG * .4));
+            goblinDEF2 = -(Math.round(goblinTotalDEF * .4));
+            goblinRES2 = -(Math.round(goblinTotalRES * .4));
+            goblinCRT2 = -(Math.round(goblinTotalCRT * .4));
+            goblinSKL2 = -(Math.round(goblinTotalSKL * .4));
+            //console.log( goblinATK2, goblinMAG2, goblinDEF2, goblinRES2, goblinCRT2, goblinSKL2)
+            statUpdates();
+            //Failsafe//
+            if (goblinTotalATK < 0) {
+                goblinATK2 = -(goblinATK);
+            }
+            if (goblinTotalMAG < 0) {
+                goblinMAG2 = -(goblinMAG);
+            }
+            if (goblinTotalDEF < 0) {
+                goblinDEF2 = -(goblinDEF);
+            }
+            if (goblinTotalRES < 0) {
+                goblinRES2 = -(goblinRES);
+            }
+            if (goblinTotalCRT < 0) {
+                goblinCRT2 = -(goblinCRT);
+            }
+            if (goblinTotalSKL < 0) {
+                goblinSKL2 = -(goblinSKL);
+            }
+            //console.log( goblinATK2, goblinMAG2, goblinDEF2, goblinRES2, goblinCRT2, goblinSKL2)
+        }
+
+        //Siphon//
+        function playerSiphReg() {
+            if (turnAction == 1) {
+                if (playerHP >= playerMaXHP) {
+                    console.log(`Player failed to Heal`)
+                    playerAnim = 0;
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You cannot heal at full health. You skip your turn.`;
+                } else if (playerITM > 0) {
+                    console.log(`Player Heals`);
+                    playerAnim = 2;
+                    //Hit//
+                    if (dieSKL() > (1)) {
+                        console.log(`Player Hits`);
+                        damageDealt = Math.round(dieMAG() + dieMAG());
+                        console.log(damageDealt);
+                        if (damageDealt < Math.round(playerMaXHP * .5)) {
+                            damageDealt = Math.round(playerMaXHP * .5);
+                            if (damageDealt < 0) {
+                                damageDealt = 0;
+                            }
+                        } else if (damageDealt > playerMaXHP) {
+                            damageDealt = playerMaXHP;
+                            console.log(damageDealt);
+                        }
+                        console.log(damageDealt);
+                        potion = damageDealt;
+                        console.log(`Healed ${potion}`);
+                        playerHP = playerHP + potion;
+                        damageDealt = Math.round(damageDealt / 2);
+                        console.log(`Dealed ${damageDealt}`);
+                        goblinHP = goblinHP - damageDealt;
+                        playerITM--;
+                        if (playerHP >= playerMaXHP) {
+                            playerHP = playerMaXHP;
+                        }
+                        goblinAnim = 9;
+                        //Status//
+                        document.getElementById("battleStatus").textContent = `You use a tome and siphoned ${potion}HP and dealt ${damageDealt} to the ${enemyName}`;
+                    }
+                    //Miss//
+                    else {
+                        console.log(`Player Missed`);
+                        goblinAnim = 0;
+                        //Status//
+                        document.getElementById("battleStatus").textContent = `You missed!`;
+                    }
+                } else {
+                    console.log(`Player is out of Tomes`);
+                    playerAnim = 0;
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You have no more items. You skip your turn.`;
+                }
+                counterStatus = 0;
+                goblinDefDecay();
+                playerOffDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Huntress Attacks//
+        //Poison Arrow//
+        let playerPoison = 0;
+        let goblinPoison = 0;
+        function playerPoisonReg() {
+            playerHP = playerHP - 1;
+            if (turnAction == 1) {
+                playerAnim = 2;
+                //Hit//
+                if (dieSKL() > (4)) {
+                    console.log(`Player Hits`)
+                    playerAnim = 2;
+                    goblinAnim = 9;
+                    document.getElementById("goblinAnimation").style.webkitFilter = "grayscale(.5)";
+                    goblinPoison = playerTotalMAG - goblinTotalRES;
+                    if (goblinPoison < 0) {
+                        goblinPoison = 0;
+                    }
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You've poisoned the ${enemyName} for ${goblinPoison} turns!`;
+                }
+                //Miss//
+                else {
+                    console.log(`Player Missed`);
+                    playerAnim = 11;
+                    goblinAnim = 0;
+                    document.getElementById("playerAnimation").style.webkitFilter = "grayscale(.5)";
+                    playerPoison = playerTotalMAG - playerTotalRES;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You poisoned yourself for ${playerPoison} turns!`;
+                }
+                counterStatus = 0;
+                playerOffDecay();
+                goblinDefDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Piercing Arrow//
+        function playerPierce() {
+            if (turnAction == 1) {
+                //Normal Attack//
+                playerAnim = 3;
+                goblinAnim = 9;
+                console.log(`Player Attacks`)
+                damageDealt = Math.round(playerTotalATK / 2);
+                console.log(damageDealt);
+                if (damageDealt < 0) {
+                    damageDealt = 0;
+                    console.log(damageDealt);
+                }
+                goblinHP = goblinHP - damageDealt;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You pierced the ${enemyName} for ${damageDealt} damage!`;
+                counterStatus = 0;
+                goblinDefDecay();
+                playerOffDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Evade//
+        function playerEvade() {
+            if (turnAction == 1) {
+                playerAnim = 4;
+                goblinAnim = 0;
+                //Debuff//
+                goblinCRT2 = -(Math.round(goblinTotalCRT * .8));
+                goblinSKL2 = -(Math.round(goblinTotalSKL * .8));
+                //console.log( goblinATK2, goblinMAG2, goblinDEF2, goblinRES2, goblinCRT2, goblinSKL2)
+                statUpdates();
+                //Failsafe//
+                if (goblinTotalCRT < 0) {
+                    goblinCRT2 = -(goblinCRT);
+                }
+                if (goblinTotalSKL < 0) {
+                    goblinSKL2 = -(goblinSKL);
+                }
+                //console.log( goblinATK2, goblinMAG2, goblinDEF2, goblinRES2, goblinCRT2, goblinSKL2)
+                //Status//
+                document.getElementById("battleStatus").textContent = `Engaged Evasive Maneuvers!`;
+                counterStatus = 0;
+                goblinDefDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Ninja Attacks//
+        //Strike//
+        function playerStrikeReg() {
+            //playerHP = playerHP - 1;
+            if (turnAction == 1) {
+                playerHP = playerHP - 1;
+                playerAnim = 2;
+                //Hit//
+                if (dieSKL() >= (3)) {
+                    console.log(`Player Hits`)
+                    goblinAnim = 9;
+                    if (goblinATK2 < 0) { goblinATK2 = 0; }
+                    if (goblinMAG2 < 0) { goblinMAG2 = 0; }
+                    if (goblinDEF2 < 0) { goblinDEF2 = 0; }
+                    if (goblinRES2 < 0) { goblinRES2 = 0; }
+                    if (goblinCRT2 < 0) { goblinCRT2 = 0; }
+                    if (goblinSKL2 < 0) { goblinSKL2 = 0; }
+                    damageDealt = (goblinATK2 + goblinMAG2 + goblinDEF2 + goblinRES2 + goblinCRT2 + goblinSKL2);
+                    console.log(damageDealt);
+                    if (damageDealt < 0) {
+                        damageDealt = 0;
+                        console.log(damageDealt);
+                    }
+                    if (damageDealt >= goblinHP) {
+                        damageDealt = goblinHP - 1;
+                        console.log(damageDealt);
+                    }
+                    goblinHP = goblinHP - damageDealt;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You striked the ${enemyName} for ${damageDealt} damage!`;
+                    goblinOffDecay();
+                    goblinDefDecay();
+                }
+                //Miss//
+                else {
+                    console.log(`Player Missed`);
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You missed!`;
+                }
+                counterStatus = 0;
+                playerOffDecay();
+                goblinDefDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Steal//
+        function playerStealReg() {
+            //playerHP = playerHP - 1;
+            if (turnAction == 1) {
+                playerAnim = 2;
+                //Hit//
+                if (dieSKL() >= (2)) {
+                    console.log(`Player Hits`)
+                    goblinAnim = 9;
+                    damageDealt = dieMAG() - goblinTotalRES;
+                    console.log(damageDealt);
+                    if (damageDealt < 0) {
+                        damageDealt = 0;
+                        console.log(damageDealt);
+                    }
+                    goblinHP = goblinHP - damageDealt;
+                    if (goblinITM > 0) {
+                        goblinITM--
+                        playerITM++
+                        document.getElementById("stealITM").textContent = `+1`
+                        document.getElementById("stealITM").style.display = "inline";
+                        //Status//
+                        document.getElementById("battleStatus").textContent = `You stole one of the ${enemyName}'s ITMs and dealt ${damageDealt} damage!`;
+                    } else {
+                        //Status//
+                        document.getElementById("battleStatus").textContent = `You stole none of the ${enemyName}'s ITMs and dealt ${damageDealt} damage!`;
+                    }
+                }
+                //Miss//
+                else {
+                    console.log(`Player Missed`);
+                    goblinAnim = 0;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You missed!`;
+                }
+                counterStatus = 0;
+                playerOffDecay();
+                goblinDefDecay();
+                endTurnRefresh();
+            }
+        }
+
+        //Vanish//
+        function playerVanish() {
+            if (turnAction == 1) {
+                //playerHP = playerHP - 1;
+                playerAnim = 4;
+                goblinAnim = 0;
+                //Buff//
+                //playerATK2 = Math.round(playerTotalATK * .4);
+                //Debuff//
+                goblinCRT2 = -(goblinCRT);
+                goblinSKL2 = -(goblinSKL);
+                //console.log( goblinATK2, goblinMAG2, goblinDEF2, goblinRES2, goblinCRT2, goblinSKL2)
+                statUpdates();
+                //Failsafe//
+                if (goblinTotalCRT < 0) {
+                    goblinCRT2 = -(goblinCRT);
+                }
+                if (goblinTotalSKL < 0) {
+                    goblinSKL2 = -(goblinSKL);
+                }
+                //console.log( goblinATK2, goblinMAG2, goblinDEF2, goblinRES2, goblinCRT2, goblinSKL2)
+                //Status//
+                document.getElementById("battleStatus").textContent = `${name} vanished!`;
+                counterStatus = 0;
+                goblinDefDecay();
+                endTurnRefresh();
+            }
+        }
+
+
+        //Goblin Combat//
+
+        //Goblin Reasoning//
+        function enemyAI() {
+            if (turnAction == 1) {
+                switch (stageLevel) {
+                    //Level 1//
+                    case 0:
+                        //Goblin//
+                        goblinAI();
+                        break;
+                    //Level 2//
+                    case 1:
+                        //Red Goblin//
+                        redGoblinAI();
+                        break;
+                    //Level 3//
+                    case 2:
+                        //Goblin Brute//
+                        goblinBruteAI();
+                        break;
+                    //Level 4//
+                    case 3:
+                        //Goblin Wizard//
+                        goblinWizardAI();
+                        break;
+                    //Level 5//
+                    case 4:
+                        //Goblin King//
+                        goblinKingAI();
+                        break;
+                    //Failsafe//
+                    default:
+                        //Test Goblin//
+                        goblinTest();
+                        break;
+                }
+            }
+            poisonGoblinLogic();
+            endTurnRefresh();
+        }
+
+        //Goblin Test AI//
+        function goblinTest() {
+            console.log(`${enemyName} Test`)
+            document.getElementById("battleStatus").textContent = `Goblin Test`;
+            playerAnim = 0;
+            goblinAnim = 0;
+            playerDefDecay();
+            goblinOffDecay();
+        }
+
+        //Goblin AI//
+        function goblinAI() {
+            //Goblin Attacks//
+            if (coinFlip() == 1) {
+                goblinHitReg();
+            }
+            //Goblin Defends//
+            else {
+                goblinDefend();
+            }
+        }
+
+        //Red Goblin AI//
+        let goblinCommit = 0;
+        function redGoblinAI() {
+            if (goblinCommit == 1) {
+                goblinHitReg();
+                goblinCommit = 0;
+            } else {
+                //Goblin Attacks//
+                if (coinFlip() == 1) {
+                    goblinHitReg();
+                }
+                else {
+                    //Goblin Defends//
+                    if (coinFlip() == 1) {
+                        goblinDefend();
+                    } //Goblin Charges//
+                    else {
+                        goblinCharge();
+                        goblinCommit = 1;
+                    }
+                }
+            }
+            console.log(`Commit = ${goblinCommit}`);
+        }
+
+        //Goblin Brute AI//
+        function goblinBruteAI() {
+            if (goblinHP <= (playerATK + playerATK3) - goblinTotalDEF && goblinITM > 0) {
+                //Goblin Heals//
+                goblinHeal();
+                goblinCommit = 0;
+            } else if (goblinCommit == 1) {
+                switch (die5()) {
+                    //Goblin Charges//
+                    case 2:
+                        goblinCritCharge();
+                        goblinCommit = 1;
+                        break;
+                    //Goblin Stalls//
+                    case 1:
+                        goblinStall();
+                        break;
+                    //Goblin Attacks//
+                    default:
+                        goblinHitReg();
+                        break;
+                }
+                goblinCommit = 0;
+            } else {
+                switch (die5()) {
+                    //Goblin Charges//
+                    case 3:
+                        goblinCritCharge();
+                        goblinCommit = 1;
+                        break;
+                    //Goblin Charges//
+                    case 2:
+                        goblinDefend();
+                        break;
+                    //Goblin Stalls//
+                    case 1:
+                        goblinStall();
+                        break;
+                    //Goblin Attacks//
+                    default:
+                        goblinHitReg();
+                        break;
+                }
+            }
+            console.log(`Commit = ${goblinCommit}`);
+        }
+
+        //Goblin Wizard AI//
+        function goblinWizardAI() {
+            if (goblinHP <= playerTotalATK - goblinTotalDEF) {
+                if (goblinITM > 0) {
+                    //Goblin Heals//
+                    goblinHeal();
+                    goblinCommit = 0;
+                } else {
+                    //Insta Kill//
+                    goblinAnim = 666;
+                    console.log(`${enemyName} is possessed by Satan`)
+                    damageDealt = playerHP + 666;
+                    console.log(damageDealt);
+                    if (damageDealt < 0) {
+                        damageDealt = 0;
+                        console.log(damageDealt);
+                    }
+                    playerHP = playerHP - damageDealt;
+                    //Status//
+                    document.getElementById("battleStatus").textContent = `You have met with a terrible fate...`;
+                    document.getElementById("animationBox").style.backgroundColor = `#912121`;
+                }
+            } else if (goblinCommit == 1) {
+                switch (die5()) {
+                    //Goblin Charges//
+                    case 2:
+                        goblinMagicCharge();
+                        goblinCommit = 1;
+                        break;
+                    //Goblin Attacks//
+                    case 1:
+                        goblinHitReg();
+                        break;
+                    //Goblin Magic//
+                    default:
+                        goblinMagReg();
+                        break;
+                }
+                goblinCommit = 0;
+            } else {
+                switch (die5()) {
+                    //Goblin Charges//
+                    case 3:
+                        goblinMagicCharge();
+                        goblinCommit = 1;
+                        break;
+                    //Goblin Defends//
+                    case 2:
+                        goblinFortify();
+                        break;
+                    //Goblin Attacks//
+                    case 1:
+                        goblinHitReg();
+                        break;
+                    //Goblin Magic//
+                    default:
+                        goblinMagReg();
+                        break;
+                }
+            }
+            console.log(`Commit = ${goblinCommit}`);
+        }
+
+        //Goblin King AI//
+        function goblinKingAI() {
+            if (goblinHP <= playerTotalATK - goblinTotalDEF && goblinITM > 0) {
+                //Goblin Heals//
+                goblinHeal();
+                goblinCommit = 0;
+            } else if (goblinHP <= 5) {
+                switch (die5()) {
+                    //Goblin Defend//
+                    case 2:
+                        goblinNegate();
+                        break;
+                    //Goblin Attacks//
+                    default:
+                        goblinHitReg();
+                        break;
+                }
+            } else {
+                switch (die5()) {
+                    //Goblin Charges//
+                    case 3:
+                        goblinChargeAll();
+                        break;
+                    //Goblin Defend//
+                    case 2:
+                        goblinNegate();
+                        break;
+                    //Goblin Meteor//
+                    case 1:
+                        goblinMetReg();
+                        break;
+                    //Goblin Attacks//
+                    default:
+                        goblinHitReg();
+                        break;
+                }
+            }
+            console.log(`Commit = ${goblinCommit}`);
+        }
+
+
+
+        //Goblin Attack//
+        function goblinHitReg() {
+            //Goblin Hits//
+            goblinAnim = 1
+            if (dieGobSKL() > 1) {
+                console.log(`${enemyName} Hits`);
+                if (counterStatus == 1) {
+                    counterTrigger();
+                }
+                else {
+                    playerAnim = 9;
+                    goblinAttack();
+                }
+            }
+            //Goblin Misses//
+            else {
+                console.log(`${enemyName} Misses`);
+                playerAnim = 0;
+                //Status//
+                document.getElementById("battleStatus").textContent = `The ${enemyName} swung but missed!`;
+            }
+            playerDefDecay();
+            goblinOffDecay();
+        }
+        function goblinAttack() {
+            //Critial Hit//
+            if (die100() <= goblinTotalCRT) {
+                if (enemyName = "Goblin Brute"){
+                    goblinAnim = 6;
+                }
+                console.log(`${enemyName} CRITS!!!`)
+                damageDealt = (goblinTotalATK * 2) - playerTotalDEF;
+                console.log(damageDealt);
+                if (damageDealt < 0) {
+                    damageDealt = 0;
+                    console.log(damageDealt);
+                }
+                playerHP = playerHP - damageDealt;
+                //Status//
+                document.getElementById("battleStatus").style.color = "red";
+                document.getElementById("battleStatus").textContent = `The ${enemyName} PULVERIZED you for ${damageDealt} damage!`;
+            }
+            //Normal Attack//
+            else {
+                console.log(`${enemyName} Attacks`)
+                damageDealt = goblinTotalATK - playerTotalDEF;
+                console.log(damageDealt);
+                if (damageDealt < 0) {
+                    damageDealt = 0;
+                    console.log(damageDealt);
+                }
+                playerHP = playerHP - damageDealt;
+                //Status//
+                document.getElementById("battleStatus").textContent = `The ${enemyName} attacked you for ${damageDealt} damage!`;
+            }
+        }
+
+        //Goblin Magic//
+        function goblinMagReg() {
+            goblinHP = goblinHP - 1;
+            goblinAnim = 2;
+            //Hit//
+            if (dieGobSKL() > (3)) {
+                console.log(`${enemyName} Casts Magic`)
+                goblinMagic();
+            }
+            //Miss//
+            else {
+                console.log(`${enemyName} Missed`);
+                playerAnim = 0;
+                //Status//
+                document.getElementById("battleStatus").textContent = `${enemyName} missed!`;
+            }
+            counterStatus = 0;
+            playerDefDecay();
+            goblinOffDecay();
+        }
+        function goblinMagic() {
+            damageDealt = dieGobMAG() - playerTotalRES;
+            console.log(damageDealt);
+            damageDealt = Math.round(damageDealt - goblinITM);
+            console.log(damageDealt);
+            if (damageDealt < 0) {
+                damageDealt = 0;
+                console.log(damageDealt);
+            }
+            playerHP = playerHP - damageDealt;
+            //Incinerated//
+            if (damageDealt > (goblinTotalMAG * .9)) {
+                //Animation//
+                playerAnim = 23;
+                //Status//
+                document.getElementById("battleStatus").style.color = "red";
+                document.getElementById("battleStatus").textContent = `You were ELECTROCUTED for ${damageDealt} damage!`;
+                //Scorched//
+            } else if (damageDealt > (goblinTotalMAG * .5)) {
+                //Animation//
+                playerAnim = 22;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You were struck for ${damageDealt} damage!`;
+                //Burned//
+            } else if (damageDealt >= playerTotalMAG * .2) {
+                //Animation//
+                playerAnim = 21;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You were zapped for ${damageDealt} damage!`;
+                //Toasted//
+            } else {
+                //Animation//
+                playerAnim = 20;
+                //Status//
+                document.getElementById("battleStatus").textContent = `You were static charged for ${damageDealt} damage. Your ATK went up by 1?`;
+                playerATK2 = playerATK2 + 1;
+            }
+        }
+
+        //Goblin Meteor//
+        function goblinMetReg() {
+            goblinHP = goblinHP - 5;
+            goblinAnim = 2;
+            //Hit//
+            if (dieGobSKL() > (7)) {
+                console.log(`${enemyName} Summons Meteor`)
+                playerAnim = 24;
+                goblinMeteor();
+            }
+            //Miss//
+            else {
+                console.log(`${enemyName} Missed`);
+                playerAnim = 0;
+                //Status//
+                document.getElementById("battleStatus").textContent = `${enemyName} missed!`;
+            }
+            counterStatus = 0;
+            playerDefDecay();
+            goblinOffDecay();
+        }
+        function goblinMeteor() {
+            damageDealt = goblinTotalMAG - playerTotalDEF;
+            console.log(damageDealt);
+            if (damageDealt < 0) {
+                damageDealt = 0;
+                console.log(damageDealt);
+            }
+            playerHP = playerHP - damageDealt;
+            //Status//
+            document.getElementById("battleStatus").textContent = `You were smushed by a meteor for ${damageDealt} damage!`;
+        }
+
+        //Goblin Charge//
+        function goblinCharge() {
+            goblinAnim = 3;
+            playerAnim = 0;
+            //Charge//
+            console.log(`${enemyName} Charges`)
+            goblinATK2 = Math.round(goblinTotalATK * .4);
+            if (goblinATK2 < 1) {
+                goblinATK2 = 1;
+            }
+            console.log(goblinATK2);
+            goblinTotalATK = goblinATK + goblinATK2;
+            //Status//
+            document.getElementById("battleStatus").textContent = `The ${enemyName} prepared to strike. It's ATK increased by ${goblinATK2}!`;
+            playerDefDecay();
+        }
+
+        //Goblin Magic Charge//
+        function goblinMagicCharge() {
+            goblinAnim = 3;
+            playerAnim = 0;
+            //Charge//
+            console.log(`${enemyName} Charges MAgic`)
+            goblinMAG2 = Math.round(goblinTotalMAG * .4);
+            goblinSKL2 = Math.round(goblinTotalSKL * .4);
+            if (goblinMAG2 < 1) {
+                goblinMAG2 = 1;
+            }
+            if (goblinSKL2 < 1) {
+                goblinSKL2 = 1;
+            }
+            console.log(goblinMAG2);
+            console.log(goblinSKL2);
+            goblinTotalMAG = goblinMAG + goblinMAG2;
+            goblinTotalSKL = goblinSKL + goblinSKL2;
+            //Status//
+            document.getElementById("battleStatus").textContent = `${enemyName} harnesses energy. Their MAG increased by ${goblinMAG2} and SKL increased by ${goblinSKL2}!`;
+            playerDefDecay();
+        }
+
+        //Goblin Crit Charge//
+        function goblinCritCharge() {
+            goblinAnim = 3;
+            playerAnim = 0;
+            //Charge//
+            console.log(`${enemyName} Charges Crit`)
+            goblinCRT2 = Math.round(goblinTotalCRT * .4);
+            goblinSKL2 = Math.round(goblinTotalSKL * .4);
+            if (goblinCRT2 < 1) {
+                goblinCRT2 = 1;
+            }
+            if (goblinSKL2 < 1) {
+                goblinSKL2 = 1;
+            }
+            console.log(goblinCRT2);
+            console.log(goblinSKL2);
+            goblinTotalCRT = goblinCRT + goblinCRT2;
+            goblinTotalSKL = goblinSKL + goblinSKL2;
+            //Status//
+            document.getElementById("battleStatus").textContent = `The ${enemyName} boosted it's CRT increased by ${goblinCRT2} and SKL by ${goblinSKL2}!`;
+            playerDefDecay();
+        }
+
+        //Goblin Charge All//
+        function goblinChargeAll() {
+            goblinHP = goblinHP - 1;
+            goblinAnim = 3;
+            playerAnim = 0;
+            //Charge//
+            console.log(`${enemyName} Charges Everything`)
+            goblinATK2 = Math.round(goblinTotalATK * .5);
+            goblinMAG2 = Math.round(goblinTotalMAG * .2);
+            goblinDEF2 = Math.round(goblinTotalDEF * .2);
+            goblinRES2 = Math.round(goblinTotalRES * .2);
+            goblinCRT2 = Math.round(goblinTotalCRT * .5);
+            goblinSKL2 = -(Math.round(goblinTotalSKL * .5));
+            if (goblinATK2 < 1) {
+                goblinATK2 = 1;
+            }
+            if (goblinMAG2 < 1) {
+                goblinMAG2 = 1;
+            }
+            if (goblinDEF2 < 1) {
+                goblinDEF2 = 1;
+            }
+            if (goblinRES2 < 1) {
+                goblinRES2 = 1;
+            }
+            if (goblinCRT2 < 1) {
+                goblinCRT2 = 1;
+            }
+            if (goblinTotalSKL < 0) {
+                goblinSKL2 = -(goblinSKL);
+            }
+            console.log(goblinATK2);
+            console.log(goblinMAG2);
+            console.log(goblinDEF2);
+            console.log(goblinRES2);
+            console.log(goblinCRT2);
+            console.log(goblinSKL2);
+            //Status//
+            document.getElementById("battleStatus").textContent = `The ${enemyName} boosted ALL of it's stats!!!`;
+            playerDefDecay();
+        }
+
+        //Goblin Defend//
+        function goblinDefend() {
+            goblinAnim = 4;
+            playerAnim = 0;
+            //Defend//
+            console.log(`${enemyName} Defends`);
+            goblinDEF2 = Math.round(goblinTotalDEF * .4);
+            if (goblinDEF2 < 1) {
+                goblinDEF2 = 1;
+            }
+            console.log(goblinDEF2);
+            goblinTotalDEF = goblinDEF + goblinDEF2;
+            //Status//
+            document.getElementById("battleStatus").textContent = `The ${enemyName} defended itself. It's DEF increased by ${goblinDEF2}!`;
+            playerDefDecay();
+            goblinOffDecay();
+        }
+
+        //Goblin Fortify//
+        function goblinFortify() {
+            goblinAnim = 4;
+            playerAnim = 0;
+            //Defend//
+            console.log(`${enemyName} is Fortified`);
+            goblinDEF2 = Math.round(goblinTotalDEF * 2);
+            if (goblinDEF2 < 1) {
+                goblinDEF2 = 1;
+            }
+            goblinRES2 = Math.round(goblinTotalRES * 2);
+            if (goblinRES2 < 1) {
+                goblinRES2 = 1;
+            }
+            console.log(goblinDEF2);
+            console.log(goblinRES2);
+            goblinTotalDEF = goblinDEF + goblinDEF2;
+            goblinTotalRES = goblinRES + goblinRES2;
+            //Status//
+            document.getElementById("battleStatus").textContent = `The ${enemyName} fortified itself. It's DEF and RES multiplied by 3!`;
+            playerDefDecay();
+            goblinOffDecay();
+        }
+
+        //Goblin Negate//
+        function goblinNegate() {
+            goblinAnim = 4;
+            playerAnim = 0;
+            //Defend//
+            console.log(`${enemyName} Defends`);
+            goblinDEF2 = 999 - goblinDEF;
+            if (goblinDEF2 < 1) {
+                goblinDEF2 = 1;
+            }
+            console.log(goblinDEF2);
+            goblinTotalDEF = goblinDEF + goblinDEF2;
+            //Status//
+            document.getElementById("battleStatus").textContent = `The ${enemyName} will negate all physical damage!`;
+            playerDefDecay();
+            goblinOffDecay();
+        }
+
+        //Goblin Heal//
+        function goblinHeal() {
+            if (goblinHP >= goblinMaXHP) {
+                console.log(`${enemyName} failed to Heal`)
+                playerAnim = 0;
+                goblinAnim = 0;
+                //Status//
+                document.getElementById("battleStatus").textContent = `${enemyName} cannot heal at full health. ${enemyName} skip it's turn.`;
+            } else if (goblinITM > 0) {
+                console.log(`${enemyName} Heals`);
+                potion = dieGobMAG();
+                console.log(potion);
+                if (potion < (goblinTotalMAG * .5)) {
+                    potion = Math.round(goblinTotalMAG * .5);
+                }
+                console.log(potion);
+                goblinHP = goblinHP + potion;
+                goblinITM--;
+                if (goblinHP >= goblinMaXHP) {
+                    goblinHP = goblinMaXHP;
+                }
+                goblinAnim = 5;
+                playerAnim = 0;
+                //Status//
+                document.getElementById("battleStatus").textContent = `${enemyName} used it's item and healed by ${potion}`;
+            } else {
+                console.log(`${enemyName} is out of Potions`);
+                playerAnim = 0;
+                goblinAnim = 0;
+                //Status//
+                document.getElementById("battleStatus").textContent = `${enemyName} is out of potions and skips it's turn.`;
+            }
+            counterStatus = 0;
+            playerDefDecay();
+            goblinOffDecay();
+        }
+
+        //Goblin Stall//
+        let StallStatus = 0;
+        function goblinStall() {
+            goblinAnim = 0;
+            playerAnim = 0;
+            //Stall//
+            console.log(`${enemyName} Stalls`)
+            goblinHP++;
+            if (goblinHP > goblinMaXHP) {
+                goblinHP = goblinMaXHP;
+            }
+            goblinATK2++;
+            goblinMAG2++;
+            goblinDEF2++;
+            goblinRES2++;
+            goblinSKL2++;
+            //Status//
+            document.getElementById("battleStatus").textContent = `The ${enemyName} stalled and is slightly refreshed.`;
+            StallStatus = 1;
+            playerDefDecay();
+        }
+
+
+
+        //End Turn Refresh//
+        function endTurnRefresh() {
+            turnAction--;
+            statUpdates();
+            //WinLose//
+            if (playerHP <= 0) {
+                if (whiteFlag == 1) {
+                    playerAnim = 6;
+                } else {
+                    playerAnim = 10;
+                }
+            }
+            if (goblinHP <= 0) {
+                goblinAnim = 10;
+            }
+            updateAnimation();
+        }
+
+        //WinLose//
+        let victory = 0;
+        function winLose() {
+            allBuffDecay();
+            //Enemy Victor//
+            if (playerHP <= 0) {
+                turnAction = 0;
+                retry = 1;
+                //Animation//
+                goblinAnim = 7;
+                //Status//
+                console.log(`Enemy Win`);
+                document.getElementById("goblinName").style.color = "gold";
+                document.getElementById("battleStatus").textContent = `The ${enemyName} has Won...`;
+                document.getElementById("turnStatus").textContent = "Press [Next Turn] to Retry!";
+            }
+            //Player Vicotor//
+            else if (goblinHP <= 0) {
+                turnAction = 0;
+                turnNumber = 0;
+                victory = 1;
+                //Animation//
+                switch (selectedClass) {
+                    //Knight//
+                    case 0:
+                        if (playerHP == playerMaXHP) {
+                            playerAnim = 8;
+                        } else {
+                            playerAnim = 7;
+                        }
+                        break;
+                    //Princess//
+                    case 1:
+                        if (counterStatus == 1) {
+                            playerAnim = 8;
+                        } else {
+                            playerAnim = 7;
+                        }
+                        break;
+                    //Mage//
+                    case 2:
+                        if (playerHP == playerMaXHP) {
+                            playerAnim = 8;
+                        } else {
+                            playerAnim = 7;
+                        }
+                        break;
+                    //Huntress//
+                    case 3:
+                        if (playerPoison > 0) {
+                            playerAnim = 8;
+                        } else {
+                            playerAnim = 7;
+                        }
+                        break;
+                    //Ninja//
+                    case 4:
+                        if (goblinITM == 0) {
+                            playerAnim = 8;
+                        } else {
+                            playerAnim = 7;
+                        }
+                        break;
+                }
+                //Status//
+                console.log(`Player Win`);
+                document.getElementById("playerName").style.color = "gold";
+                document.getElementById("battleStatus").textContent = `${name} Wins!`;
+                document.getElementById("turnStatus").textContent = "Press [Next Turn] for Next Level!";
+                levelUP();
+                stealITM();
+            }
+            poisonReset();
+            updateAnimation();
+        }
+
+        //Retry//
+        let retry = 0;
+        function retryBattle() {
+            console.log(`Reset`);
+            //Next Box Reset//
+            document.getElementById("turnStatus").style.display = "none";
+            document.getElementById("nextBox").style.display = "none";
+            document.getElementById("battleStatus").textContent = `Welcome to Goblin Game II!`;
+            document.getElementById("turnStatus").textContent = "Press [Next Turn] to Start!";
+            //Class and Level Reset//
+            document.getElementById("classBox").style.display = "flex";
+            document.getElementById("knightBox").style.display = "none";
+            document.getElementById("knightGuide").style.display = "none";
+            document.getElementById("princessBox").style.display = "none";
+            document.getElementById("princessGuide").style.display = "none";
+            document.getElementById("mageBox").style.display = "none";
+            document.getElementById("mageGuide").style.display = "none";
+            document.getElementById("huntressBox").style.display = "none";
+            document.getElementById("huntressGuide").style.display = "none";
+            document.getElementById("ninjaBox").style.display = "none";
+            document.getElementById("ninjaGuide").style.display = "none";
+            document.getElementById("playerAnimation").src = "placeHolderPlayer.gif";
+            document.getElementById("goblinAnimation").src = "placeHolderGoblin.gif";
+            if (name == "Knight" || "Princess" || "Mage" || "Huntress" || "Ninja") {
+                name = `Hero`;
+                document.getElementById("playerName").textContent = name;
+            }
+            //Misc Reset//
+            document.getElementById("goblinName").style.color = "black";
+            levelReset();
+            gambitStatus = 0;
+            retry = 0;
+            whiteFlag = 0;
+            turnNumber = 0;
+            stageLevel = 0;
+        }
+
+        //Victory//
+        function victoryCheck() {
+            document.getElementById("playerName").style.color = "black";
+            document.getElementById("turnStatus").textContent = "Press [Next Turn] to Start!";
+            victory = 0;
+            turnNumber = 0;
+            turnAction = 0;
+            stageLevel++
+            if (stageLevel > 4){
+                stageLevel = 0;
+                goblinBonus = goblinBonus + 5;
+            }
+            levelSelect();
+            console.log(`Turn #${turnNumber} - Player Actions = ${turnAction} - Victory = ${victory} - Retry = ${retry} - Flag = ${whiteFlag}`);
+            document.getElementById("battleStatus").textContent = `Level ${stageLevel + 1}`
+        }
+
+        //Buff Decay//
+        function playerOffDecay() {
+            playerATK2 = 0;
+            playerMAG2 = 0;
+            playerCRT2 = 0;
+            playerSKL2 = 0;
+            gambitStatus = 0;
+        }
+        function playerDefDecay() {
+            playerDEF2 = 0;
+            playerRES2 = 0;
+        }
+        function goblinOffDecay() {
+            goblinATK2 = 0;
+            goblinMAG2 = 0;
+            goblinCRT2 = 0;
+            goblinSKL2 = 0;
+        }
+        function goblinDefDecay() {
+            goblinDEF2 = 0;
+            goblinRES2 = 0;
+            StallStatus = 0;
+        }
+        function allBuffDecay() {
+            playerOffDecay();
+            playerDefDecay();
+            goblinOffDecay();
+            goblinDefDecay();
+        }
+
+        //Poison//
+        function poisonPlayerLogic() {
+            if (playerPoison > 0) {
+                playerHP = playerHP - 2;
+                document.getElementById("playerAnimation").style.webkitFilter = "grayscale(.5)";
+                playerPoison--
+            } else {
+                document.getElementById("playerAnimation").style.webkitFilter = "grayscale(0)";
+            }
+        }
+        function poisonGoblinLogic() {
+            if (goblinPoison > 0) {
+                goblinHP = goblinHP - 2;
+                document.getElementById("goblinAnimation").style.webkitFilter = "grayscale(.5)";
+                goblinPoison--
+            } else {
+                document.getElementById("goblinAnimation").style.webkitFilter = "grayscale(0)";
+            }
+        }
+        function poisonReset() {
+            playerPoison = 0;
+            goblinPoison = 0;
+            document.getElementById("playerAnimation").style.webkitFilter = "grayscale(0)";
+            document.getElementById("goblinAnimation").style.webkitFilter = "grayscale(0)";
+        }
+
+        //Level Up//
+        let tempHP = 0;
+        let tempATK = 0;
+        let tempMAG = 0;
+        let tempDEF = 0;
+        let tempRED = 0;
+        let tempCRT = 0;
+        let tempSKL = 0;
+        function levelUP() {
+            if (die100() <= growthHP) {
+                tempHP = die5()
+                playerHP3 = playerHP3 + tempHP;
+                document.getElementById("levelHP").textContent = `+${tempHP}`
+                document.getElementById("levelHP").style.display = "inline";
+                playerMaXHP = playerMaXHP + playerHP3;
+            }
+            if (die100() <= growthATK) {
+                tempATK = coinFlip();
+                playerATK3 = playerATK3 + tempATK;
+                document.getElementById("levelATK").textContent = `+${tempATK}`
+                document.getElementById("levelATK").style.display = "inline";
+            }
+            if (die100() <= growthMAG) {
+                tempMAG = coinFlip()
+                playerMAG3 = playerMAG3 + tempMAG;
+                document.getElementById("levelMAG").textContent = `+${tempMAG}`
+                document.getElementById("levelMAG").style.display = "inline";
+            }
+            if (die100() <= growthDEF) {
+                tempDEF = coinFlip()
+                playerDEF3 = playerDEF3 + tempDEF;
+                document.getElementById("levelDEF").textContent = `+${tempDEF}`
+                document.getElementById("levelDEF").style.display = "inline";
+            }
+            if (die100() <= growthRES) {
+                tempRES = coinFlip()
+                playerRES3 = playerRES3 + tempRES;
+                document.getElementById("levelRES").textContent = `+${tempRES}`
+                document.getElementById("levelRES").style.display = "inline";
+            }
+            if (die100() <= growthCRT) {
+                tempCRT = die10();
+                playerCRT3 = playerCRT3 + tempCRT;
+                document.getElementById("levelCRT").textContent = `+${tempCRT}%`
+                document.getElementById("levelCRT").style.display = "inline";
+            }
+            if (die100() <= growthSKL) {
+                tempSKL = coinFlip()
+                playerSKL3 = playerSKL3 + tempSKL;
+                document.getElementById("levelSKL").textContent = `+${tempSKL}`
+                document.getElementById("levelSKL").style.display = "inline";
+            }
+            if (die100() <= growthITM) {
+                playerITM++;
+                document.getElementById("levelITM").textContent = `+1`
+                document.getElementById("levelITM").style.display = "inline";
+            }
+            //if (stageLevel != 0) {
+            playerHP = playerMaXHP;
+            //}
+        }
+
+        function levelDOWN() {
+            if (die100() <= growthHP) {
+                tempHP = die5()
+                playerHP3 = playerHP3 - tempHP;
+                if (playerHP3 < 0) { playerHP3 = 0 };
+                document.getElementById("levelHP").textContent = `+${tempHP}`
+                document.getElementById("levelHP").style.display = "inline";
+                playerMaXHP = playerMaXHP + playerHP3;
+            }
+            if (die100() <= growthATK) {
+                tempATK = coinFlip();
+                playerATK3 = playerATK3 - tempATK;
+                if (playerATK3 < 0) { playerATK3 = 0 };
+                document.getElementById("levelATK").textContent = `+${tempATK}`
+                document.getElementById("levelATK").style.display = "inline";
+            }
+            if (die100() <= growthMAG) {
+                tempMAG = coinFlip()
+                playerMAG3 = playerMAG3 - tempMAG;
+                if (playerMAG3 < 0) { playerMAG3 = 0 };
+                document.getElementById("levelMAG").textContent = `+${tempMAG}`
+                document.getElementById("levelMAG").style.display = "inline";
+            }
+            if (die100() <= growthDEF) {
+                tempDEF = coinFlip()
+                playerDEF3 = playerDEF3 - tempDEF;
+                if (playerDEF3 < 0) { playerDEF3 = 0 };
+                document.getElementById("levelDEF").textContent = `+${tempDEF}`
+                document.getElementById("levelDEF").style.display = "inline";
+            }
+            if (die100() <= growthRES) {
+                tempRES = coinFlip()
+                playerRES3 = playerRES3 - tempRES;
+                if (playerRES3 < 0) { playerRES3 = 0 };
+                document.getElementById("levelRES").textContent = `+${tempRES}`
+                document.getElementById("levelRES").style.display = "inline";
+            }
+            if (die100() <= growthCRT) {
+                tempCRT = die10();
+                playerCRT3 = playerCRT3 - tempCRT;
+                if (playerCRT3 < 0) { playerCRT3 = 0 };
+                document.getElementById("levelCRT").textContent = `+${tempCRT}%`
+                document.getElementById("levelCRT").style.display = "inline";
+            }
+            if (die100() <= growthSKL) {
+                tempSKL = coinFlip()
+                playerSKL3 = playerSKL3 - tempSKL;
+                if (playerSKL3 < 0) { playerSKL3 = 0 };
+                document.getElementById("levelSKL").textContent = `+${tempSKL}`
+                document.getElementById("levelSKL").style.display = "inline";
+            }
+        }
+
+        //Steal Items//
+        function stealITM() {
+            if (goblinITM > 0) {
+                playerITM = playerITM + goblinITM;
+                document.getElementById("stealITM").textContent = `+${goblinITM}`
+                document.getElementById("stealITM").style.display = "inline";
+            }
+        }
+
+        //Level Down//
+        function levelReset() {
+            playerHP3 = 0;
+            playerATK3 = 0;
+            playerMAG3 = 0;
+            playerDEF3 = 0;
+            playerRES3 = 0;
+            playerCRT3 = 0;
+            playerSKL3 = 0;
+            goblinBonus = 0;
+            hideLevel();
+        }
+
+        //Hide Level//
+        function hideLevel() {
+            document.getElementById("levelHP").style.display = "none";
+            document.getElementById("levelATK").style.display = "none";
+            document.getElementById("levelMAG").style.display = "none";
+            document.getElementById("levelDEF").style.display = "none";
+            document.getElementById("levelRES").style.display = "none";
+            document.getElementById("levelCRT").style.display = "none";
+            document.getElementById("levelSKL").style.display = "none";
+            document.getElementById("levelITM").style.display = "none";
+            document.getElementById("stealITM").style.display = "none";
+        }
+
+
+
+        //Update Stats//
+        function statUpdates() {
+            //Player//
+            //HP//
+            document.getElementById("playerHP").textContent = `${playerHP}/${playerMaXHP}`;
+            //ATK//
+            playerTotalATK = playerATK + playerATK2 + playerATK3;
+            document.getElementById("playerATK").textContent = playerTotalATK;
+            //MAG//
+            playerTotalMAG = playerMAG + playerMAG2 + playerMAG3;
+            document.getElementById("playerMAG").textContent = playerTotalMAG;
+            //DEF//
+            playerTotalDEF = playerDEF + playerDEF2 + playerDEF3;
+            document.getElementById("playerDEF").textContent = playerTotalDEF;
+            //RES//
+            playerTotalRES = playerRES + playerRES2 + playerRES3;
+            document.getElementById("playerRES").textContent = playerTotalRES;
+            //CRT//
+            playerTotalCRT = playerCRT + playerCRT2 + playerCRT3;
+            document.getElementById("playerCRT").textContent = `${playerTotalCRT}%`;
+            //SKL//
+            playerTotalSKL = playerSKL + playerSKL2 + playerSKL3;
+            document.getElementById("playerSKL").textContent = playerTotalSKL;
+            //ITM//
+            document.getElementById("playerITM").textContent = playerITM;
+            //Goblin//
+            //HP//
+            document.getElementById("goblinHP").textContent = `${goblinHP}/${goblinMaXHP}`;
+            //ATK//
+            goblinTotalATK = goblinATK + goblinATK2 + goblinBonus;
+            document.getElementById("goblinATK").textContent = goblinTotalATK;
+            //MAG//
+            goblinTotalMAG = goblinMAG + goblinMAG2 + goblinBonus;
+            document.getElementById("goblinMAG").textContent = goblinTotalMAG;
+            //DEF//
+            goblinTotalDEF = goblinDEF + goblinDEF2 + goblinBonus;
+            document.getElementById("goblinDEF").textContent = goblinTotalDEF;
+            //RES//
+            goblinTotalRES = goblinRES + goblinRES2 + goblinBonus;
+            document.getElementById("goblinRES").textContent = goblinTotalRES;
+            //CRT//
+            goblinTotalCRT = goblinCRT + goblinCRT2 + goblinBonus;
+            document.getElementById("goblinCRT").textContent = `${goblinTotalCRT}%`;
+            //SKL//
+            goblinTotalSKL = goblinSKL + goblinSKL2 + goblinBonus;
+            document.getElementById("goblinSKL").textContent = goblinTotalSKL;
+            //ITM//
+            document.getElementById("goblinITM").textContent = goblinITM;
+            //HP Color//
+            if (playerHP == playerMaXHP) {
+                document.getElementById("playerHP").style.color = "lightgreen";
+            } else if (playerHP == 0) {
+                document.getElementById("playerHP").style.color = "red";
+            } else if (playerHP <= goblinTotalATK - playerTotalDEF) {
+                document.getElementById("playerHP").style.color = "red";
+            } else {
+                document.getElementById("playerHP").style.color = "black";
+            }
+            if (goblinHP == goblinMaXHP) {
+                document.getElementById("goblinHP").style.color = "lightgreen";
+            } else if (goblinHP <= playerTotalATK - goblinTotalDEF) {
+                document.getElementById("goblinHP").style.color = "red";
+            } else {
+                document.getElementById("goblinHP").style.color = "black";
+            }
+            //ATK Color//
+            if (playerATK2 > 0) {
+                document.getElementById("playerATK").style.color = "orange";
+            } else if (playerATK2 < 0) {
+                document.getElementById("playerATK").style.color = "red";
+            } else {
+                document.getElementById("playerATK").style.color = "black";
+            }
+            if (goblinATK2 > 0) {
+                document.getElementById("goblinATK").style.color = "orange";
+            } else if (goblinATK2 < 0) {
+                document.getElementById("goblinATK").style.color = "red";
+            } else {
+                document.getElementById("goblinATK").style.color = "black";
+            }
+            //MAG Color//
+            if (playerMAG2 > 0) {
+                document.getElementById("playerMAG").style.color = "yellow";
+            } else if (playerMAG2 < 0) {
+                document.getElementById("playerMAG").style.color = "red";
+            } else {
+                document.getElementById("playerMAG").style.color = "black";
+            }
+            if (goblinMAG2 > 0) {
+                document.getElementById("goblinMAG").style.color = "yellow";
+            } else if (goblinMAG2 < 0) {
+                document.getElementById("goblinMAG").style.color = "red";
+            } else {
+                document.getElementById("goblinMAG").style.color = "black";
+            }
+            //DEF Color//
+            if (playerDEF2 > 0) {
+                document.getElementById("playerDEF").style.color = "lightblue"
+            } else if (playerDEF2 < 0) {
+                document.getElementById("playerDEF").style.color = "red";
+            } else {
+                document.getElementById("playerDEF").style.color = "black";
+            }
+            if (goblinDEF2 > 0) {
+                document.getElementById("goblinDEF").style.color = "lightblue";
+            } else if (goblinDEF2 < 0) {
+                document.getElementById("goblinDEF").style.color = "red";
+            } else {
+                document.getElementById("goblinDEF").style.color = "black";
+            }
+            //RES Color//
+            if (playerRES2 > 0) {
+                document.getElementById("playerRES").style.color = "purple";
+            } else if (playerRES2 < 0) {
+                document.getElementById("playerRES").style.color = "red";
+            } else {
+                document.getElementById("playerRES").style.color = "black";
+            }
+            if (goblinRES2 > 0) {
+                document.getElementById("goblinRES").style.color = "purple";
+            } else if (goblinRES2 < 0) {
+                document.getElementById("goblinRES").style.color = "red";
+            } else {
+                document.getElementById("goblinRES").style.color = "black";
+            }
+            //CRT Color//
+            if (playerCRT2 > 0) {
+                document.getElementById("playerCRT").style.color = "green";
+            } else if (playerCRT2 < 0) {
+                document.getElementById("playerCRT").style.color = "red";
+            } else {
+                document.getElementById("playerCRT").style.color = "black";
+            }
+            if (goblinCRT2 > 0) {
+                document.getElementById("goblinCRT").style.color = "green";
+            } else if (goblinCRT2 < 0) {
+                document.getElementById("goblinCRT").style.color = "red";
+            } else {
+                document.getElementById("goblinCRT").style.color = "black";
+            }
+            //SKL Color//
+            if (playerSKL2 > 0) {
+                document.getElementById("playerSKL").style.color = "goldenrod";
+            } else if (playerSKL2 < 0) {
+                document.getElementById("playerSKL").style.color = "red";
+            } else {
+                document.getElementById("playerSKL").style.color = "black";
+            }
+            if (goblinSKL2 > 0) {
+                document.getElementById("goblinSKL").style.color = "goldenrod";
+            } else if (goblinSKL2 < 0) {
+                document.getElementById("goblinSKL").style.color = "red";
+            } else {
+                document.getElementById("goblinSKL").style.color = "black";
+            }
+            //ITM Color//
+            if (playerITM == 0) {
+                document.getElementById("playerITM").style.color = "red";
+            } else {
+                document.getElementById("playerITM").style.color = "black";
+            }
+            if (goblinITM == 0) {
+                document.getElementById("goblinITM").style.color = "red";
+            } else {
+                document.getElementById("goblinITM").style.color = "black";
+            }
+        }
+
+        //Animations//
+        //player//
+        let playerAnim = 0;
+        function playerAnimation() {
+            switch (selectedClass) {
+                //Knight//
+                case 0:
+                    switch (playerAnim) {
+                        //Idle//
+                        case 0:
+                            document.getElementById("playerAnimation").src = "knightAnim0_Idle.gif";
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("playerAnimation").src = "knightAnim1_Attack.gif";
+                            break;
+                        //Magic//
+                        case 2:
+                            document.getElementById("playerAnimation").src = "knightAnim2_Magic.gif";
+                            break;
+                        //Charge//
+                        case 3:
+                            document.getElementById("playerAnimation").src = "knightAnim3_Charge.gif";
+                            break;
+                        //Defend//
+                        case 4:
+                            document.getElementById("playerAnimation").src = "knightAnim4_Defend.gif";
+                            break;
+                        //Heal//
+                        case 5:
+                            document.getElementById("playerAnimation").src = "knightAnim5_Heal.gif";
+                            break;
+                        //Surrender//
+                        case 6:
+                            document.getElementById("playerAnimation").src = "knightAnim6_Surrender.gif";
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("playerAnimation").src = "knightAnim7_Victory.gif";
+                            break;
+                        //Secret//
+                        case 8:
+                            document.getElementById("playerAnimation").src = "knightAnim8_Secret.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("playerAnimation").src = "knightAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("playerAnimation").src = "knightAnim10_Death.gif";
+                            break;
+                        //Magic Damage//
+                        //Static Charged//
+                        case 20:
+                            document.getElementById("playerAnimation").src = "knightAnim20_StaticCharged.gif";
+                            break;
+                        //Zapped//
+                        case 21:
+                            document.getElementById("playerAnimation").src = "knightAnim21_Zapped.gif";
+                            break;
+                        //Struck//
+                        case 22:
+                            document.getElementById("playerAnimation").src = "knightAnim22_Struck.gif";
+                            break;
+                        //Electrocuted//
+                        case 23:
+                            document.getElementById("playerAnimation").src = "knightAnim23_Electrocuted.gif";
+                            break;
+                        //Failsafe//    
+                        default:
+                            document.getElementById("playerAnimation").src = "placeholderPlayer.gif";
+                            break;
+                    }
+                    break;
+                //Princess//
+                case 1:
+                    switch (playerAnim) {
+                        //Idle//
+                        case 0:
+                            if (gambitStatus == 1) {
+                                document.getElementById("playerAnimation").src = "princessAnim11_GambitIdle.gif";
+                            } else {
+                                document.getElementById("playerAnimation").src = "princessAnim0_Idle.gif";
+                            }
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("playerAnimation").src = "princessAnim1_Attack.gif";
+                            break;
+                        //Counter//
+                        case 2:
+                            document.getElementById("playerAnimation").src = "princessAnim2_Counter.gif";
+                            break;
+                        //Gambit//
+                        case 3:
+                            document.getElementById("playerAnimation").src = "princessAnim3_Gambit.gif";
+                            break;
+                        //Defend//
+                        case 4:
+                            document.getElementById("playerAnimation").src = "princessAnim4_Defend.gif";
+                            break;
+                        //Heal//
+                        case 5:
+                            document.getElementById("playerAnimation").src = "princessAnim5_Heal.gif";
+                            break;
+                        //Surrender//
+                        case 6:
+                            document.getElementById("playerAnimation").src = "princessAnim6_Surrender.gif";
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("playerAnimation").src = "princessAnim7_Victory.gif";
+                            break;
+                        //Secret//
+                        case 8:
+                            document.getElementById("playerAnimation").src = "princessAnim8_Secret.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("playerAnimation").src = "princessAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("playerAnimation").src = "princessAnim10_Death.gif";
+                            break;
+                        //GambitIdle//
+                        case 11:
+                            document.getElementById("playerAnimation").src = "princessAnim11_GambitIdle.gif";
+                            break;
+                        //GambitAttack//
+                        case 12:
+                            document.getElementById("playerAnimation").src = "princessAnim12_GambitAttack.gif";
+                            break;
+                        //Magic Damage//
+                        //Static Charged//
+                        case 20:
+                            if (gambitStatus == 1) {
+                                document.getElementById("playerAnimation").src = "princessAnim20_staticCharged1.gif";
+                            } else {
+                                document.getElementById("playerAnimation").src = "princessAnim20_staticCharged0.gif";
+                            }
+                            break;
+                        //Zapped//
+                        case 21:
+                            document.getElementById("playerAnimation").src = "princessAnim21_Zapped.gif";
+                            break;
+                        //Struck//
+                        case 22:
+                            document.getElementById("playerAnimation").src = "princessAnim22_Struck.gif";
+                            break;
+                        //Electrocuted//
+                        case 23:
+                            document.getElementById("playerAnimation").src = "princessAnim23_Electrocuted.gif";
+                            break;
+                        //Failsafe//
+                        default:
+                            document.getElementById("playerAnimation").src = "placeholderPlayer.gif";
+                            break;
+                    }
+                    break;
+                //Mage//
+                case 2:
+                    switch (playerAnim) {
+                        //Idle//
+                        case 0:
+                            document.getElementById("playerAnimation").src = "mageAnim0_Idle.gif";
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("playerAnimation").src = "knightAnim1_Attack.gif";
+                            break;
+                        //Magic//
+                        case 2:
+                            document.getElementById("playerAnimation").src = "knightAnim2_Magic.gif";
+                            break;
+                        //Charge//
+                        case 3:
+                            document.getElementById("playerAnimation").src = "knightAnim3_Charge.gif";
+                            break;
+                        //Defend//
+                        case 4:
+                            document.getElementById("playerAnimation").src = "knightAnim4_Defend.gif";
+                            break;
+                        //Heal//
+                        case 5:
+                            document.getElementById("playerAnimation").src = "knightAnim5_Heal.gif";
+                            break;
+                        //Surrender//
+                        case 6:
+                            document.getElementById("playerAnimation").src = "knightAnim6_Surrender.gif";
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("playerAnimation").src = "knightAnim7_Victory.gif";
+                            break;
+                        //Secret//
+                        case 8:
+                            document.getElementById("playerAnimation").src = "knightAnim8_Secret.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("playerAnimation").src = "knightAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("playerAnimation").src = "knightAnim10_Death.gif";
+                            break;
+                        //Failsafe//    
+                        default:
+                            document.getElementById("playerAnimation").src = "placeholderPlayer.gif";
+                            break;
+                    }
+                    break;
+                //Huntress//
+                case 3:
+                    switch (playerAnim) {
+                        //Idle//
+                        case 0:
+                            document.getElementById("playerAnimation").src = "huntressAnim0_Idle.gif";
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("playerAnimation").src = "huntressAnim1_Attack.gif";
+                            break;
+                        //Poison//
+                        case 2:
+                            document.getElementById("playerAnimation").src = "huntressAnim2_Poison.gif";
+                            break;
+                        //Pierce//
+                        case 3:
+                            document.getElementById("playerAnimation").src = "huntressAnim3_Pierce.gif";
+                            break;
+                        //Evade//
+                        case 4:
+                            document.getElementById("playerAnimation").src = "huntressAnim4_Evade.gif";
+                            break;
+                        //Heal//
+                        case 5:
+                            document.getElementById("playerAnimation").src = "huntressAnim5_Heal.gif";
+                            break;
+                        //Surrender//
+                        case 6:
+                            document.getElementById("playerAnimation").src = "huntressAnim6_Surrender.gif";
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("playerAnimation").src = "huntressAnim7_Victory.gif";
+                            break;
+                        //Secret//
+                        case 8:
+                            document.getElementById("playerAnimation").src = "huntressAnim8_Secret.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("playerAnimation").src = "huntressAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("playerAnimation").src = "huntressAnim10_Death.gif";
+                            break;
+                        //Missed//
+                        case 11:
+                            document.getElementById("playerAnimation").src = "huntressAnim11_Missed.gif";
+                            break;
+                        //Magic Damage//
+                        //Static Charged//
+                        case 20:
+                            document.getElementById("playerAnimation").src = "huntressAnim20_StaticCharged.gif";
+                            break;
+                        //Zapped//
+                        case 21:
+                            document.getElementById("playerAnimation").src = "huntressAnim21_Zapped.gif";
+                            break;
+                        //Struck//
+                        case 22:
+                            document.getElementById("playerAnimation").src = "huntressAnim22_Struck.gif";
+                            break;
+                        //Electrocuted//
+                        case 23:
+                            document.getElementById("playerAnimation").src = "huntressAnim23_Electrocuted.gif";
+                            break;
+                        //Failsafe//    
+                        default:
+                            document.getElementById("playerAnimation").src = "placeholderPlayer.gif";
+                            break;
+                    }
+                    break;
+                //Ninja//
+                case 4:
+                    switch (playerAnim) {
+                        //Idle//
+                        case 0:
+                            document.getElementById("playerAnimation").src = "knightAnim0_Idle.gif";
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("playerAnimation").src = "knightAnim1_Attack.gif";
+                            break;
+                        //Magic//
+                        case 2:
+                            document.getElementById("playerAnimation").src = "knightAnim2_Magic.gif";
+                            break;
+                        //Charge//
+                        case 3:
+                            document.getElementById("playerAnimation").src = "knightAnim3_Charge.gif";
+                            break;
+                        //Defend//
+                        case 4:
+                            document.getElementById("playerAnimation").src = "knightAnim4_Defend.gif";
+                            break;
+                        //Heal//
+                        case 5:
+                            document.getElementById("playerAnimation").src = "knightAnim5_Heal.gif";
+                            break;
+                        //Surrender//
+                        case 6:
+                            document.getElementById("playerAnimation").src = "knightAnim6_Surrender.gif";
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("playerAnimation").src = "knightAnim7_Victory.gif";
+                            break;
+                        //Secret//
+                        case 8:
+                            document.getElementById("playerAnimation").src = "knightAnim8_Secret.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("playerAnimation").src = "knightAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("playerAnimation").src = "knightAnim10_Death.gif";
+                            break;
+                        //Magic Damage//
+                        //Static Charged//
+                        case 20:
+                            document.getElementById("playerAnimation").src = "knightAnim20_StaticCharged.gif";
+                            break;
+                        //Zapped//
+                        case 21:
+                            document.getElementById("playerAnimation").src = "knightAnim21_Zapped.gif";
+                            break;
+                        //Struck//
+                        case 22:
+                            document.getElementById("playerAnimation").src = "knightAnim22_Struck.gif";
+                            break;
+                        //Electrocuted//
+                        case 23:
+                            document.getElementById("playerAnimation").src = "knightAnim23_Electrocuted.gif";
+                            break;
+                        //Failsafe//    
+                        default:
+                            document.getElementById("playerAnimation").src = "placeholderPlayer.gif";
+                            break;
+                    }
+                    break;
+
+            }
+        }
+
+        //Goblin//
+        let goblinAnim = 0;
+        function goblinAnimation() {
+            switch (stageLevel) {
+                //Goblin//
+                case 0:
+                    switch (goblinAnim) {
+                        //Idle//
+                        case 0:
+                            document.getElementById("goblinAnimation").src = "goblinAnim0_Idle.gif";
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("goblinAnimation").src = "goblinAnim1_Attack.gif";
+                            break;
+                        //Defend//
+                        case 4:
+                            document.getElementById("goblinAnimation").src = "goblinAnim4_Defend.gif";
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("goblinAnimation").src = "goblinAnim7_Victory.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("goblinAnimation").src = "goblinAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("goblinAnimation").src = "goblinAnim10_Death.gif";
+                            break;
+                        //Magic Damage//    
+                        //Toasted//
+                        case 20:
+                            document.getElementById("goblinAnimation").src = "goblinAnim20_Toasted.gif";
+                            break;
+                        //Burned//
+                        case 21:
+                            document.getElementById("goblinAnimation").src = "goblinAnim21_Burned.gif";
+                            break;
+                        //Scorched//
+                        case 22:
+                            document.getElementById("goblinAnimation").src = "goblinAnim22_Scorched.gif";
+                            break;
+                        //Incinerated//
+                        case 23:
+                            document.getElementById("goblinAnimation").src = "goblinAnim23_Incinerated.gif";
+                            break;
+                        //Failsafe//    
+                        default:
+                            document.getElementById("goblinAnimation").src = "placeholderGoblin.gif";
+                            break;
+                    }
+                    break;
+                //Red Goblin//
+                case 1:
+                    switch (goblinAnim) {
+                        //Idle//
+                        case 0:
+                            document.getElementById("goblinAnimation").src = "roblinAnim0_Idle.gif";
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("goblinAnimation").src = "roblinAnim1_Attack.gif";
+                            break;
+                        //Charge//
+                        case 3:
+                            document.getElementById("goblinAnimation").src = "roblinAnim3_Charge.gif";
+                            break;
+                        //Defend//
+                        case 4:
+                            document.getElementById("goblinAnimation").src = "roblinAnim4_Defend.gif";
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("goblinAnimation").src = "roblinAnim7_Victory.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("goblinAnimation").src = "roblinAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("goblinAnimation").src = "roblinAnim10_Death.gif";
+                            break;
+                        //Magic Damage//    
+                        //Toasted//
+                        case 20:
+                            document.getElementById("goblinAnimation").src = "roblinAnim20_Toasted.gif";
+                            break;
+                        //Burned//
+                        case 21:
+                            document.getElementById("goblinAnimation").src = "roblinAnim21_Burned.gif";
+                            break;
+                        //Scorched//
+                        case 22:
+                            document.getElementById("goblinAnimation").src = "roblinAnim22_Scorched.gif";
+                            break;
+                        //Incinerated//
+                        case 23:
+                            document.getElementById("goblinAnimation").src = "roblinAnim23_Incinerated.gif";
+                            break;
+                        //Failsafe//    
+                        default:
+                            document.getElementById("goblinAnimation").src = "placeholderGoblin.gif";
+                            break;
+                    }
+                    break;
+                //Goblin Brute//
+                case 2:
+                    switch (goblinAnim) {
+                        //Idle//
+                        case 0:
+                            if (StallStatus == 1) {
+                                document.getElementById("goblinAnimation").src = "boblinAnim2_Stall.gif";
+                            } else {
+                                document.getElementById("goblinAnimation").src = "boblinAnim0_Idle.gif";
+                            }
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("goblinAnimation").src = "boblinAnim1_Attack.gif";
+                            break;
+                        //Charge//
+                        case 3:
+                            document.getElementById("goblinAnimation").src = "boblinAnim3_Charge.gif";
+                            break;
+                        //Defend//
+                        case 4:
+                            document.getElementById("goblinAnimation").src = "roblinAnim4_Defend.gif";
+                            break;
+                        //Heal//
+                        case 5:
+                            document.getElementById("goblinAnimation").src = "placeholderGoblin.gif";
+                            break;
+                        //Crit//
+                        case 6:
+                            document.getElementById("goblinAnimation").src = "boblinEarly.gif";
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("goblinAnimation").src = "roblinAnim7_Victory.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("goblinAnimation").src = "roblinAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("goblinAnimation").src = "roblinAnim10_Death.gif";
+                            break;
+                        //Magic Damage//    
+                        //Toasted//
+                        case 20:
+                            document.getElementById("goblinAnimation").src = "roblinAnim20_Toasted.gif";
+                            break;
+                        //Burned//
+                        case 21:
+                            document.getElementById("goblinAnimation").src = "roblinAnim21_Burned.gif";
+                            break;
+                        //Scorched//
+                        case 22:
+                            document.getElementById("goblinAnimation").src = "roblinAnim22_Scorched.gif";
+                            break;
+                        //Incinerated//
+                        case 23:
+                            document.getElementById("goblinAnimation").src = "roblinAnim23_Incinerated.gif";
+                            break;
+                        //Failsafe//    
+                        default:
+                            document.getElementById("goblinAnimation").src = "placeholderGoblin.gif";
+                            break;
+                    }
+                    break;
+                //Goblin Wizard//
+                case 3:
+                    switch (goblinAnim) {
+                        //Idle//
+                        case 0:
+                            document.getElementById("goblinAnimation").src = "woblinAnim0_Idle.gif";
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("goblinAnimation").src = "woblinAnim1_Attack.gif";
+                            break;
+                        //Magic//
+                        case 2:
+                            document.getElementById("goblinAnimation").src = "roblinAnim3_Charge.gif";
+                            break;
+                        //Charge//
+                        case 3:
+                            document.getElementById("goblinAnimation").src = "woblinAnim3_Charge.gif";
+                            break;
+                        //Defend//
+                        case 4:
+                            document.getElementById("goblinAnimation").src = "woblinAnim4_Defend.gif";
+                            break;
+                        //Heal//
+                        case 5:
+                            switch (die5()) {
+                                case 1: document.getElementById("goblinAnimation").src = "woblinAnim5_Heal0.gif"; break;
+                                case 2: document.getElementById("goblinAnimation").src = "woblinAnim5_Heal1.gif"; break;
+                                case 3: document.getElementById("goblinAnimation").src = "woblinAnim5_Heal2.gif"; break;
+                                case 4: document.getElementById("goblinAnimation").src = "woblinAnim5_Heal3.gif"; break;
+                                case 5: document.getElementById("goblinAnimation").src = "woblinAnim5_Heal4.gif"; break;
+                            }
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("goblinAnimation").src = "woblinAnim7_Victory.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("goblinAnimation").src = "woblinAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("goblinAnimation").src = "roblinAnim10_Death.gif";
+                            break;
+                        //Magic Damage//    
+                        //Toasted//
+                        case 20:
+                            document.getElementById("goblinAnimation").src = "woblinAnim20_Toasted.gif";
+                            break;
+                        //Burned//
+                        case 21:
+                            document.getElementById("goblinAnimation").src = "woblinAnim21_Burned.gif";
+                            break;
+                        //Scorched//
+                        case 22:
+                            document.getElementById("goblinAnimation").src = "woblinAnim22_Scorched.gif";
+                            break;
+                        //Incinerated//
+                        case 23:
+                            document.getElementById("goblinAnimation").src = "woblinAnim23_Incinerated.gif";
+                            break;
+                        //Insta Kill//
+                        case 666:
+                            document.getElementById("goblinAnimation").src = "woblinAnim666_EXE.gif";
+                            break;
+                        //Failsafe//    
+                        default:
+                            document.getElementById("goblinAnimation").src = "placeholderGoblin.gif";
+                            break;
+                    }
+                    break;
+                //Test Goblin//
+                default:
+                    switch (goblinAnim) {
+                        //Idle//
+                        case 0:
+                            document.getElementById("goblinAnimation").src = "placeholderGoblin.gif";
+                            break;
+                        //Attack//
+                        case 1:
+                            document.getElementById("goblinAnimation").src = "goblinAnim1_Attack.gif";
+                            break;
+                        //Defend//
+                        case 4:
+                            document.getElementById("goblinAnimation").src = "goblinAnim4_Defend.gif";
+                            break;
+                        //Victory//
+                        case 7:
+                            document.getElementById("goblinAnimation").src = "goblinAnim7_Victory.gif";
+                            break;
+                        //Damaged//
+                        case 9:
+                            document.getElementById("goblinAnimation").src = "goblinAnim9_Damaged.gif";
+                            break;
+                        //Death//
+                        case 10:
+                            document.getElementById("goblinAnimation").src = "goblinAnim10_Death.gif";
+                            break;
+                        //Magic Damage//    
+                        //Toasted//
+                        case 20:
+                            document.getElementById("goblinAnimation").src = "goblinAnim20_Toasted.gif";
+                            break;
+                        //Burned//
+                        case 21:
+                            document.getElementById("goblinAnimation").src = "goblinAnim21_Burned.gif";
+                            break;
+                        //Scorched//
+                        case 22:
+                            document.getElementById("goblinAnimation").src = "goblinAnim22_Scorched.gif";
+                            break;
+                        //Incinerated//
+                        case 23:
+                            document.getElementById("goblinAnimation").src = "goblinAnim23_Incinerated.gif";
+                            break;
+                        //Failsafe//    
+                        default:
+                            document.getElementById("goblinAnimation").src = "placeholderGoblin.gif";
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        function updateAnimation() {
+            playerAnimation();
+            goblinAnimation();
+        }
+
+    </script>
+
+
+
+
+</body>
+
+<footer>
+    <hr>
+    <h4>Tutorial</h4>
+    <h5>Defeat the Goblin to win. Whoever's HP is reduced down to 0 loses.</h5>
+    <h5>Hit [Next Turn] to start the game.</h5>
+    <h5>On your turn select an action. Example: [Attack]</h5>
+    <h5>When your turn is over press [Next Turn].</h5>
+    <hr>
+    <span id="knightGuide">
+        <h4>Knight Guide</h4>
+        <h5>[Attack] - Deal Damage if Player's ATK > Enemy's DEF</h5>
+        <h5>[Magic] - Lose 1HP to cast a spell that deals 0-MAG - Enemy's RES</h5>
+        <h5>[Charge] - Increase ATK by 40% for one Turn</h5>
+        <h5>[Defend] - Increase DEF by 40% for one Turn<br>
+            Allows you to hold [Charge] for one more Turn</h5>
+        <h5>[Heal] - Use 1 ITM to heal for HP/2-MAG</h5>
+        <h5>[Give Up] - Forfeits the Fight</h5>
+    </span>
+    <span id="princessGuide">
+        <h4>Princess Guide</h4>
+        <h5>[Attack] - Deal Damage if Player's ATK > Enemy's DEF</h5>
+        <h5>[Counter] - Lose 2HP to Counter Attack if the Enemy Attacks the Next Turn</h5>
+        <h5>[Gambit] - Sacrifice DEF by 50% to Boost ATK by 50%</h5>
+        <h5>[Defend] - Increase DEF by 40% for one Turn<br>
+            Cannot be Selected When Using [Gambit]</h5>
+        <h5>[Heal] - Use 1 ITM to heal for HP/2-MAG</h5>
+        <h5>[Give Up] - Forfeits the Fight</h5>
+    </span>
+    <span id="mageGuide">
+        <h4>Mage Guide</h4>
+        <h5>[Attack] - Deal Damage if Player's ATK > Enemy's DEF</h5>
+        <h5>[Magic] - Lose 1HP to Cast a Spell that Deals 0-MAG - Enemy's RES</h5>
+        <h5>[Magic Charge] - Increase MAG by 40% for one Turn</h5>
+        <h5>[Debuff] - Decrease all Enemy stats by 40%<br>
+            <h5>[Siphon] - Use 1 ITM to Heal x2 the Damage Dealt</h5>
+            <h5>[Give Up] - Forfeits the Fight</h5>
+    </span>
+    <span id="huntressGuide">
+        <h4>Huntress Guide</h4>
+        <h5>[Attack] - Deal Damage if Player's ATK > Enemy's DEF</h5>
+        <h5>[Poison] - Lose 1HP to Poison Enemy for Several Turns but has Chance to Poison Self</h5>
+        <h5>[Piercing Arrow] - Deal Half Damage While Ignoring Enemy DEF and 100% Accurate</h5>
+        <h5>[Evade] - Decrease Enemy SKL and CRT by 80%</h5>
+        <h5>[Heal] - Use 1 ITM to Heal for HP/2-MAG</h5>
+        <h5>[Give Up] - Forfeits the Fight</h5>
+    </span>
+    <span id="ninjaGuide">
+        <h4>Ninja Guide</h4>
+        <h5>[Attack] - Deal Damage if Player's ATK > Enemy's DEF</h5>
+        <h5>[Strike] - Lose 1HP to Deal Damage Based off Enemy Buffs - Cannot Kill</h5>
+        <h5>[Steal] - Steal Enemy ITM</h5>
+        <h5>[Vanish] - Decrease Enemy SKL and CRT to 0</h5>
+        <h5>[Heal] - Use 1 ITM to heal for HP/2-MAG</h5>
+        <h5>[Give Up] - Forfeits the fight</h5>
+    </span>
+</footer>
